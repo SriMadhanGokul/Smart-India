@@ -1,0 +1,16 @@
+# dependencies and build output
+node_modules/
+dist/
+
+# rendered videos, audio and frame dumps from the video pipelines
+*.mp4
+*.wav
+video/out/
+video2/out/
+
+# local tooling
+.claude/
+.vscode/
+.DS_Store
+Thumbs.db
+*.log

@@ -1,0 +1,12 @@
+{
+  "name": "smartindia-3d-promo-video",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "render": "node render.mjs"
+  },
+  "dependencies": {
+    "puppeteer-core": "^23.11.1",
+    "three": "^0.170.0"
+  }
+}

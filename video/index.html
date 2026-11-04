@@ -1,0 +1,683 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SmartIndia 3D Promo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,600;1,700;1,800&display=block" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#000}
+body{font-family:'Plus Jakarta Sans',sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
+
+/* ---------- Outer showcase frame (vertical 9:16) ---------- */
+#stage{position:absolute;inset:0;overflow:hidden;background:#020107}
+.og{position:absolute;pointer-events:none;border-radius:50%}
+#ogTop{left:-520px;top:-560px;width:1500px;height:1300px;
+  background:radial-gradient(closest-side,rgba(92,82,255,.95),rgba(60,48,200,.55) 45%,rgba(30,20,120,.18) 75%,transparent)}
+#ogBeam{left:-300px;top:-200px;width:1700px;height:420px;transform:rotate(28deg);border-radius:50%;
+  background:radial-gradient(closest-side,rgba(150,145,255,.35),transparent);filter:blur(30px)}
+#ogBand{left:-360px;top:520px;width:1800px;height:820px;
+  background:radial-gradient(closest-side,rgba(78,64,235,.8),rgba(50,36,170,.38) 55%,transparent)}
+#ogBottom{left:-500px;top:1500px;width:1400px;height:900px;
+  background:radial-gradient(closest-side,rgba(60,40,190,.28),transparent)}
+#title{position:absolute;top:428px;left:0;right:0;text-align:center;font-family:'Outfit';font-weight:700;font-size:68px;letter-spacing:.5px;
+  background:linear-gradient(90deg,#5b52f2 0%,#8a83ff 45%,#b8b3ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 24px rgba(110,100,255,.45))}
+#window{position:absolute;left:12px;top:612px;width:1056px;height:596px;border:2px solid rgba(175,172,220,.45);
+  box-shadow:0 0 70px rgba(100,88,255,.55),0 0 0 1px rgba(0,0,0,.6) inset;overflow:hidden;background:#000}
+#sub{position:absolute;top:1282px;left:0;right:0;text-align:center;font-family:'Outfit';font-weight:600;font-size:34px;color:#a29ed2;letter-spacing:.6px}
+#domain{position:absolute;top:1330px;left:0;right:0;text-align:center;font-family:'Outfit';font-weight:600;font-size:62px;color:#fff;letter-spacing:.3px}
+
+/* ---------- The website being "screen-recorded" (1440x810) ---------- */
+#site{position:absolute;left:0;top:0;width:1440px;height:810px;transform:scale(.730556);transform-origin:0 0;overflow:hidden;background:#000}
+#gl{position:absolute;left:0;top:0;width:1440px;height:810px;z-index:2;pointer-events:none}
+#pglow{position:absolute;width:760px;height:760px;margin:-380px 0 0 -380px;border-radius:50%;z-index:1;pointer-events:none;
+  background:radial-gradient(closest-side,rgba(90,78,240,.55),rgba(60,50,180,.18) 55%,transparent)}
+.page{position:absolute;left:0;top:0;width:1440px;z-index:3}
+.sec{position:absolute;left:0;width:1440px}
+.abs{position:absolute}
+.muted{color:rgba(255,255,255,.62)}
+.pill{display:inline-flex;align-items:center;gap:10px;border-radius:999px;font-weight:600;font-size:14px;padding:12px 22px;
+  background:linear-gradient(180deg,#7a72ff,#5a51e0);box-shadow:0 0 0 1px rgba(255,255,255,.18) inset,0 8px 30px rgba(108,99,255,.45);color:#fff}
+.pill.ghost{background:transparent;box-shadow:none;padding-left:4px;color:rgba(255,255,255,.85)}
+.h2{font-size:42px;font-weight:500;letter-spacing:-.5px}
+.label{font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.55);font-weight:600}
+i,em{font-style:italic;font-weight:800}
+
+/* nav */
+#nav{position:absolute;left:0;top:0;width:1440px;height:84px;z-index:20}
+#nav::before{content:"";position:absolute;left:0;right:0;top:0;height:110px;background:linear-gradient(#000 55%,rgba(0,0,0,0))}
+#logo{position:absolute;left:120px;top:30px;font-weight:800;font-size:18px;letter-spacing:2px}
+#logo span{font-weight:400;color:rgba(255,255,255,.65)}
+.nl{position:absolute;top:33px;font-size:13px;color:rgba(255,255,255,.88);font-weight:500}
+.nl.on::after{content:"";position:absolute;left:0;right:0;bottom:-7px;height:2px;border-radius:2px;background:#7a72ff}
+#navBtn{position:absolute;right:120px;top:22px;height:40px;border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:0 4px 0 18px;
+  display:flex;align-items:center;gap:14px;font-size:13px;font-weight:500}
+#navBtn b{width:44px;height:32px;border-radius:999px;background:#fff;display:flex;align-items:center;justify-content:center}
+
+/* loader */
+#loader{position:absolute;inset:0;z-index:40;background:#000;overflow:hidden}
+#ldCol{position:absolute;left:0;top:0;width:330px;height:810px;border-right:1px solid rgba(255,255,255,.08);overflow:hidden}
+#ldFill{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(0deg,#5a51e0,rgba(90,81,224,.25) 70%,rgba(90,81,224,0))}
+#ldPct{position:absolute;left:40px;top:34px;font-size:64px;font-style:italic;font-weight:700}
+#ldTxt{position:absolute;left:40px;bottom:30px;font-size:12px;letter-spacing:3px;color:rgba(255,255,255,.75)}
+.bigbg{position:absolute;font-weight:800;letter-spacing:-6px;white-space:nowrap;color:transparent;
+  background:linear-gradient(180deg,rgba(255,255,255,.13),rgba(255,255,255,.02));-webkit-background-clip:text;background-clip:text}
+
+/* hero */
+#beam{position:absolute;left:-260px;top:-150px;width:1000px;height:240px;transform:rotate(32deg);border-radius:50%;
+  background:radial-gradient(closest-side,rgba(170,165,255,.55),rgba(110,100,255,.15) 60%,transparent);filter:blur(18px);z-index:1}
+.hl{position:absolute;font-size:56px;font-weight:300;letter-spacing:-1px;white-space:nowrap;text-shadow:0 2px 30px rgba(0,0,0,.6)}
+.stat{display:flex;align-items:center;gap:8px}
+.stat b{font-size:28px;font-weight:700}
+.stat span{font-size:11px;line-height:1.25;color:rgba(255,255,255,.75)}
+
+/* services */
+.card{position:absolute;top:0;width:340px;height:452px;border-radius:18px;overflow:hidden;background:#07070c;border:1px solid rgba(255,255,255,.1)}
+.card .cbg{position:absolute;inset:0;background:linear-gradient(160deg,#6a63d8,#4a44a8 55%,#3a358c)}
+.card .dots{position:absolute;right:0;bottom:0;width:200px;height:200px;
+  background-image:radial-gradient(rgba(140,130,255,.55) 1.2px,transparent 1.6px);background-size:12px 12px;
+  -webkit-mask-image:linear-gradient(315deg,#000 10%,transparent 70%)}
+.card .num{position:absolute;left:28px;top:28px;font-size:30px;font-weight:500}
+.card .arr{position:absolute;right:26px;top:30px}
+.card .ct{position:absolute;left:28px;right:60px;font-weight:600;line-height:1.2}
+.card .cd{position:absolute;left:28px;right:28px;top:118px;font-size:14px;line-height:1.6;color:rgba(255,255,255,.88)}
+.card .cl{position:absolute;left:28px;right:28px;bottom:26px;display:flex;justify-content:space-between}
+.card .cl h6{font-size:13px;font-weight:500;color:rgba(255,255,255,.6);margin-bottom:6px}
+.card .cl li{list-style:none;font-size:12px;line-height:1.75}
+.tools{display:grid;grid-template-columns:repeat(3,30px);gap:7px}
+.tools div{width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.16);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
+
+/* case studies */
+.row{position:absolute;left:120px;width:640px;height:72px;border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;gap:26px;padding:0 16px}
+.row .n{font-size:15px;width:22px}
+.row .t{font-size:18px;font-weight:600;width:260px}
+.tag{font-size:10.5px;border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:4px 10px;margin-right:6px;color:rgba(255,255,255,.75)}
+.mock{position:absolute;inset:0;border-radius:14px;overflow:hidden}
+
+/* testimonials */
+.tcard{position:absolute;left:0;width:340px;border-radius:16px;background:#0a0a11;border:1px solid rgba(255,255,255,.09);padding:24px}
+.tcard p{font-size:13px;line-height:1.65;color:rgba(255,255,255,.82)}
+.who{display:flex;align-items:center;gap:12px;margin-top:18px}
+.av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;
+  background:radial-gradient(circle at 30% 30%,#a59fff,#4b43c4 70%)}
+.who b{display:block;font-size:13px}.who small{font-size:11px;color:rgba(255,255,255,.55)}
+
+/* footer */
+.fcol h6{font-size:12px;color:rgba(255,255,255,.45);font-weight:500;margin-bottom:12px}
+.fcol li{list-style:none;font-size:13px;line-height:1.95}
+
+/* about */
+.wd{transition:none}
+.hcard{position:absolute;top:150px;width:380px;height:300px;border-radius:16px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,#09090f,#050508);padding:34px}
+.orb{width:64px;height:64px;border-radius:50%;background:radial-gradient(circle at 32% 30%,#e3e0ff,#8c84ff 35%,#3e36b8 75%,#1a1550);box-shadow:0 10px 40px rgba(120,110,255,.45)}
+.hcard h3{font-size:30px;font-weight:600;line-height:1.12;margin-top:70px;letter-spacing:-.5px}
+.hcard p{font-size:13px;color:rgba(255,255,255,.7);margin-top:12px;line-height:1.55}
+.team{position:absolute;top:200px;width:220px;height:310px;border-radius:18px;background:linear-gradient(180deg,#0d0d16,#060609);border:1px solid rgba(255,255,255,.09);text-align:center;padding-top:34px}
+.team .ava{width:128px;height:128px;margin:0 auto;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:800;
+  background:radial-gradient(circle at 30% 25%,#f1efff,#9a93ff 28%,#5148d6 62%,#1c1760);box-shadow:0 18px 50px rgba(110,100,255,.4),inset 0 -10px 30px rgba(0,0,0,.35)}
+.team b{display:block;margin-top:26px;font-size:16px;font-weight:600;padding:0 10px}
+.team small{display:block;margin-top:6px;font-size:11px;color:#9c96ff;text-transform:uppercase;letter-spacing:1px;padding:0 12px;line-height:1.4}
+.step{position:absolute;left:120px;width:1200px;height:118px;display:flex;align-items:center;gap:40px}
+.step .ln{position:absolute;left:0;bottom:0;height:1px;background:rgba(255,255,255,.16)}
+.step .sn{font-size:13px;color:#9c96ff;width:80px;letter-spacing:1px}
+.step h4{font-size:30px;font-weight:600;width:420px;letter-spacing:-.5px}
+.step p{font-size:14px;color:rgba(255,255,255,.66);width:520px;line-height:1.6}
+.marq{position:absolute;white-space:nowrap;font-size:64px;font-weight:700;letter-spacing:-1px}
+.marq span{color:#8b84ff;margin:0 26px;font-size:40px;vertical-align:middle}
+
+/* chrome */
+#scroll{position:absolute;right:6px;top:8px;bottom:8px;width:6px;border-radius:6px;background:rgba(255,255,255,.07);z-index:30}
+#thumb{position:absolute;left:0;width:6px;height:90px;border-radius:6px;background:rgba(255,255,255,.42)}
+#cursor{position:absolute;left:0;top:0;z-index:60;width:22px;height:28px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.6))}
+#ripple{position:absolute;z-index:59;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;border:2px solid rgba(160,150,255,.9)}
+#curtain{position:absolute;inset:0;z-index:35;background:#000;pointer-events:none}
+#menu{position:absolute;left:470px;top:76px;width:620px;border-radius:16px;z-index:25;background:rgba(14,13,24,.96);border:1px solid rgba(255,255,255,.1);
+  padding:22px;display:grid;grid-template-columns:1fr 1fr;gap:10px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.mi{display:flex;gap:14px;padding:12px;border-radius:12px}
+.mi .ic{width:40px;height:40px;border-radius:10px;flex:none;background:radial-gradient(circle at 30% 30%,#b4aeff,#5148d6 70%);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800}
+.mi b{font-size:14px;display:block}.mi small{font-size:11.5px;color:rgba(255,255,255,.55);line-height:1.45;display:block;margin-top:3px}
+</style>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js"}}</script>
+</head>
+<body>
+<div id="stage">
+  <div class="og" id="ogTop"></div>
+  <div class="og" id="ogBeam"></div>
+  <div class="og" id="ogBand"></div>
+  <div class="og" id="ogBottom"></div>
+  <div id="title">3D Agency Website</div>
+
+  <div id="window"><div id="site">
+    <div id="pglow"></div>
+    <canvas id="gl" width="1440" height="810"></canvas>
+
+    <!-- ================= HOME PAGE ================= -->
+    <div class="page" id="home">
+      <!-- HERO -->
+      <section class="sec" id="hero" style="top:0;height:810px">
+        <div id="beam"></div>
+        <div class="bigbg" id="heroBig" style="left:40px;top:120px;font-size:212px" data-in="2.75">SMARTINDIA</div>
+        <div class="hl" style="left:415px;top:262px" data-in="3.0">We Build <i>Digital</i></div>
+        <div class="hl" style="left:525px;top:332px" data-in="3.15"><i>Experiences</i> That Grow</div>
+        <div class="hl" style="left:640px;top:402px" data-in="3.3">Your <i>Business</i></div>
+        <p class="abs muted" style="left:120px;top:628px;width:340px;font-size:14px;line-height:1.6" data-in="3.5">From startups to established companies, we create high-impact digital solutions that attract, engage, and convert customers.</p>
+        <div class="abs" style="left:120px;top:700px" data-in="3.65"><span class="pill">Discover More</span></div>
+        <div class="abs" style="left:900px;top:708px;display:flex;gap:38px" data-in="3.8">
+          <div class="stat"><b data-count="300" data-c0="3.8" data-suf="+">0</b><span>Happy<br>Customers</span></div>
+          <div class="stat"><b data-count="92" data-c0="3.9" data-suf="%">0</b><span>Clients<br>Returning</span></div>
+          <div class="stat"><b data-count="4.8" data-c0="4.0" data-dec="1" data-suf="★">0</b><span>Customer<br>Rating</span></div>
+        </div>
+      </section>
+
+      <!-- SERVICES (pinned) -->
+      <section class="sec" id="services" style="top:810px;height:810px">
+        <div class="h2 abs" style="left:600px;top:92px" data-in="12.5">Our Services</div>
+        <p class="abs muted" style="left:1000px;top:86px;width:330px;font-size:14px;line-height:1.6" data-in="12.65">We offer complete digital solutions that attract, engage and convert customers across every touchpoint.</p>
+        <div class="abs" id="track" style="left:600px;top:168px;height:452px;width:2200px" data-in="12.8"></div>
+      </section>
+
+      <!-- CASE STUDIES -->
+      <section class="sec" id="cases" style="top:1620px;height:810px">
+        <div class="h2 abs" style="left:120px;top:110px" data-in="26.3">Case Studies</div>
+        <p class="abs muted" style="left:960px;top:112px;width:360px;font-size:14px;line-height:1.6;text-align:right" data-in="26.45">Proven results, measurable impact — explore the growth we've delivered for our clients.</p>
+        <div id="rows"></div>
+        <div class="abs" id="preview" style="left:840px;top:205px;width:480px;height:330px;perspective:1200px" data-in="26.7">
+          <div id="pv" style="position:absolute;inset:0;transform-style:preserve-3d"></div>
+        </div>
+      </section>
+
+      <!-- TESTIMONIALS -->
+      <section class="sec" id="testi" style="top:2430px;height:810px;overflow:hidden">
+        <div class="h2 abs" style="left:120px;top:130px;line-height:1.15" data-in="31.2">What our clients<br><span class="muted">say about us</span></div>
+        <div class="abs" style="left:120px;top:290px" data-in="31.4">
+          <div style="font-size:64px;font-weight:700">4.8<span style="font-size:22px;color:#9c96ff"> /5</span></div>
+          <div style="color:#ffc75a;font-size:18px;letter-spacing:3px">★★★★★</div>
+          <div class="muted" style="font-size:13px;margin-top:8px">(5k+) customer reviews<br>Capterra 4.8/5 &nbsp;·&nbsp; Google 4.8/5</div>
+        </div>
+        <div class="abs" id="tc1" style="left:600px;top:0;width:340px;height:810px"></div>
+        <div class="abs" id="tc2" style="left:970px;top:0;width:340px;height:810px"></div>
+        <div class="abs" style="left:560px;top:0;width:800px;height:120px;background:linear-gradient(#000,transparent)"></div>
+        <div class="abs" style="left:560px;top:690px;width:800px;height:120px;background:linear-gradient(transparent,#000)"></div>
+      </section>
+
+      <!-- TRUSTED ARC -->
+      <section class="sec" id="trusted" style="top:3240px;height:460px;overflow:hidden">
+        <div class="abs" style="left:0;right:0;top:86px;text-align:center" data-in="35.1">
+          <div style="font-size:32px;font-weight:600">Trusted by Growing Brands</div>
+          <div class="muted" style="font-size:13px;margin-top:8px">Businesses across India and beyond rely on SMARTINDIA.DIGITAL</div>
+        </div>
+        <div class="abs" id="arcGlow" style="left:-80px;top:260px;width:1600px;height:600px;border-radius:50%;border-top:2px solid rgba(190,185,255,.9);
+          box-shadow:0 -14px 50px rgba(120,110,255,.55), inset 0 30px 60px rgba(100,90,255,.35)" data-in="35.3"></div>
+        <div id="arc"></div>
+      </section>
+
+      <!-- CTA + FOOTER -->
+      <section class="sec" id="cta" style="top:3700px;height:810px">
+        <div class="abs" style="left:120px;top:40px;width:1200px;height:300px;border-radius:16px;border:1px solid rgba(255,255,255,.08);background:#040407;overflow:hidden" data-in="37.6">
+          <svg id="wave" width="1200" height="300" style="position:absolute;inset:0;filter:blur(18px)"></svg>
+          <div class="abs" style="left:46px;top:110px;font-size:32px;line-height:1.25;letter-spacing:-.5px">We turn bold ideas into<br><b style="font-weight:700">powerful digital realities.</b></div>
+          <div class="abs" style="left:46px;top:214px"><span class="pill">Let's work together &nbsp;→</span></div>
+        </div>
+        <div class="abs" style="left:120px;top:470px" data-in="38.0">
+          <div style="font-size:22px">info@smartindia.ai</div>
+          <div style="font-size:13px;margin-top:10px;text-decoration:underline;color:rgba(255,255,255,.8)">Instagram ↗</div>
+          <div style="font-size:14px;margin-top:22px">Based in Tirupur, India &nbsp;<span class="muted">Serving clients globally</span></div>
+          <div style="font-size:92px;font-weight:600;letter-spacing:-2px;margin-top:2px"><span id="clock">10:30:00</span><span style="font-size:18px;margin-left:8px">AM</span></div>
+        </div>
+        <div class="abs fcol" style="left:800px;top:472px" data-in="38.1"><h6>Services</h6><ul><li>Social Media Marketing</li><li>Web Development</li><li>App Development</li><li>SEO</li><li>Meta &amp; Google Ads</li><li>Graphic Designing</li></ul></div>
+        <div class="abs fcol" style="left:1000px;top:472px" data-in="38.2"><h6>Company</h6><ul><li>About</li><li>Portfolio</li><li>Team</li><li>Pricing</li><li>Blogs</li></ul></div>
+        <div class="abs fcol" style="left:1150px;top:472px" data-in="38.3"><h6>Contact</h6><ul><li>+91 99949 00470</li><li>Mon – Sat</li><li>8:00 – 6:30</li><li>Tirupur, TN</li></ul></div>
+        <div class="abs" style="left:0;top:690px;width:1440px;height:120px;background:radial-gradient(60% 100% at 50% 100%,rgba(90,78,240,.35),transparent)"></div>
+      </section>
+    </div>
+
+    <!-- ================= ABOUT PAGE ================= -->
+    <div class="page" id="about">
+      <section class="sec" style="top:0;height:810px;overflow:hidden">
+        <div class="abs label" style="left:120px;top:176px;line-height:1.9" data-in="41.4">Creative digital agency<br>based in Tirupur, India</div>
+        <div class="abs" style="left:470px;top:150px;width:860px;font-size:46px;font-weight:600;line-height:1.18;letter-spacing:-1px">
+          <div data-in="41.5">We're a creative digital agency</div>
+          <div data-in="41.62">turning complex challenges into</div>
+          <div data-in="41.74"><i style="color:#a9a3ff">measurable results.</i></div>
+        </div>
+        <div class="abs" style="left:470px;top:370px;display:flex;gap:16px" data-in="41.9"><span class="pill">Start Your Project</span><span class="pill ghost">Our Work &nbsp;→</span></div>
+        <div class="abs" style="left:0;top:560px;width:1440px;height:110px;border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08);overflow:hidden" data-in="42.1">
+          <div class="marq" id="marq" style="top:14px">Digital Agency<span>✦</span>Smart &amp; Efficient<span>✦</span>Powerful Performance<span>✦</span>Digital Excellence<span>✦</span>Growth Platform<span>✦</span>Digital Agency<span>✦</span>Smart &amp; Efficient<span>✦</span>Powerful Performance<span>✦</span></div>
+        </div>
+      </section>
+
+      <section class="sec" style="top:810px;height:810px">
+        <div class="abs label" style="left:120px;top:84px" data-in="45.3">Who we are</div>
+        <div class="abs" id="reveal" style="left:120px;top:120px;width:1200px;font-size:36px;font-weight:500;line-height:1.3;letter-spacing:-.5px"></div>
+        <div class="abs" style="left:800px;top:420px;width:520px" data-in="46.4">
+          <div style="font-size:24px;font-weight:600">Founded in Tirupur, Tamil Nadu</div>
+          <p class="muted" style="font-size:14px;line-height:1.7;margin-top:12px">Our team of designers, developers and marketers partners with startups and established brands to design, build and grow digital products that deliver real results.</p>
+          <div style="display:flex;gap:44px;margin-top:30px">
+            <div><b style="font-size:40px" data-count="300" data-c0="46.6" data-suf="+">0</b><div class="muted" style="font-size:12px">Happy customers</div></div>
+            <div><b style="font-size:40px" data-count="15" data-c0="46.7" data-suf="+">0</b><div class="muted" style="font-size:12px">Years in digital service</div></div>
+            <div><b style="font-size:40px" data-count="6" data-c0="46.8">0</b><div class="muted" style="font-size:12px">Core services</div></div>
+          </div>
+        </div>
+        <div class="abs" id="pin" style="width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:#fff;box-shadow:0 0 0 6px rgba(140,130,255,.35),0 0 30px #8b84ff"></div>
+        <div class="abs" id="pinLbl" style="font-size:12px;font-weight:600;background:rgba(20,18,40,.85);border:1px solid rgba(255,255,255,.15);border-radius:999px;padding:5px 12px;white-space:nowrap">📍 Tirupur HQ</div>
+      </section>
+
+      <section class="sec" style="top:1620px;height:600px">
+        <div class="abs" style="left:0;right:0;top:60px;text-align:center;font-size:34px;font-weight:600" data-in="49.2">Key Highlights</div>
+        <div class="hcard" style="left:120px" data-in="49.4"><div class="orb"></div><h3>Creativity Meets<br>Strategy</h3><p>Ideas grounded in data — every design decision is built to move your numbers.</p></div>
+        <div class="hcard" style="left:530px" data-in="49.55"><div class="orb" style="filter:hue-rotate(-25deg)"></div><h3>Design. Develop.<br>Deliver.</h3><p>One team from first sketch to launch — websites, apps and campaigns, end to end.</p></div>
+        <div class="hcard" style="left:940px" data-in="49.7"><div class="orb" style="filter:hue-rotate(25deg)"></div><h3>Innovative<br>Development</h3><p>Modern stacks like Laravel, React and Flutter for fast, scalable, secure products.</p></div>
+      </section>
+
+      <section class="sec" style="top:2220px;height:810px;perspective:1400px">
+        <div class="abs" style="left:0;right:0;top:70px;text-align:center;font-size:38px;font-weight:600;line-height:1.2" data-in="51.6">Meet the Team<br><span class="muted">Behind SMARTINDIA</span></div>
+        <div id="teamWrap"></div>
+      </section>
+
+      <section class="sec" style="top:3030px;height:810px">
+        <div class="abs label" style="left:120px;top:84px" data-in="54.6">How we think</div>
+        <div class="abs" style="left:120px;top:112px;font-size:44px;font-weight:600;letter-spacing:-1px" data-in="54.7">Shaping the future through <i style="color:#a9a3ff">step-by-step</i> innovation</div>
+        <div id="steps"></div>
+      </section>
+
+      <section class="sec" style="top:3840px;height:810px">
+        <div class="abs" style="left:120px;top:210px">
+          <div style="font-size:26px;font-weight:400" data-in="57.0">Let's Create Something</div>
+          <div style="font-size:84px;font-weight:800;font-style:italic;letter-spacing:-2px;line-height:1.05" data-in="57.12">That Matters</div>
+          <p class="muted" style="font-size:15px;line-height:1.65;width:440px;margin-top:20px" data-in="57.25">Tell us about your goals — we'll craft the strategy, design and technology to make them real.</p>
+          <div style="display:flex;gap:16px;margin-top:28px" data-in="57.35"><span class="pill">Start Your Project</span><span class="pill ghost">Explore Services &nbsp;→</span></div>
+        </div>
+        <div class="abs" style="left:120px;top:690px;width:1200px;border-top:1px solid rgba(255,255,255,.1);padding-top:26px;display:flex;justify-content:space-between;font-size:14px" data-in="57.5">
+          <span>info@smartindia.ai</span><span>+91 99949 00470</span><span class="muted">Tirupur, Tamil Nadu, India</span><span class="muted">Twitter · Facebook · Instagram</span>
+        </div>
+      </section>
+    </div>
+
+    <!-- ================= CHROME ================= -->
+    <div id="nav">
+      <div id="logo">SMARTINDIA<span>.DIGITAL</span></div>
+      <div class="nl" style="left:540px">Home</div>
+      <div class="nl" style="left:612px">About</div>
+      <div class="nl" style="left:684px">Services</div>
+      <div class="nl" style="left:771px">Portfolio</div>
+      <div class="nl" style="left:858px">Team</div>
+      <div class="nl" style="left:922px">Contact</div>
+      <div id="navBtn">Let's Talk <b><svg width="16" height="16" viewBox="0 0 16 16"><path d="M4 12L12 4M5 4h7v7" stroke="#000" stroke-width="1.8" fill="none"/></svg></b></div>
+    </div>
+    <div id="menu"></div>
+    <div id="curtain"></div>
+    <div id="loader">
+      <div class="bigbg" style="left:380px;top:300px;font-size:150px">SMARTINDIA</div>
+      <div id="ldCol"><div id="ldFill"></div><div id="ldPct">0%</div><div id="ldTxt">LOADING...</div></div>
+    </div>
+    <div id="scroll"><div id="thumb"></div></div>
+    <div id="ripple"></div>
+    <svg id="cursor" viewBox="0 0 22 28"><path d="M2 2 L2 22 L7.5 17 L11 25.5 L14.5 24 L11 16 L18.5 16 Z" fill="#fff" stroke="#000" stroke-width="1.4" stroke-linejoin="round"/></svg>
+  </div></div>
+
+  <div id="sub">DIGITAL AGENCY · TIRUPUR, INDIA</div>
+  <div id="domain">smartindia.digital</div>
+</div>
+
+<script type="module">
+import * as THREE from 'three';
+
+/* ---------- timeline helpers ---------- */
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const lerp=(a,b,p)=>a+(b-a)*p;
+const seg=(t,a,b)=>clamp((t-a)/(b-a));
+const eio=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
+const eout=x=>1-Math.pow(1-x,3);
+function kf(t,keys,ease=eio){
+  if(t<=keys[0][0])return keys[0][1];
+  for(let i=0;i<keys.length-1;i++){const[a,va]=keys[i],[b,vb]=keys[i+1];if(t<=b)return lerp(va,vb,ease(seg(t,a,b)));}
+  return keys[keys.length-1][1];
+}
+const $=s=>document.querySelector(s);
+const PX=810/(2*10*Math.tan(THREE.MathUtils.degToRad(17.5)));   // site px per world unit at z=0
+const DURATION=60;
+
+/* ---------- content ---------- */
+const SERVICES=[
+  {t:'Social Media Marketing',d:'Drive engagement and grow your brand presence across every social platform with strategic, data-led campaigns.',s:['Content & Reels','Community Management','Influencer Campaigns','Analytics & Reporting'],k:['Ig','Fb','Li','Yt','Ca','X']},
+  {t:'Web Development',d:'Custom, responsive and high-performance websites tailored to your business needs and user experience.',s:['Custom Websites','E-commerce Stores','CMS & Landing Pages','Speed & Security'],k:['Lv','Re','Wp','Js','Tw','Ph']},
+  {t:'App Development',d:'Powerful, intuitive mobile apps for iOS and Android that deliver seamless user journeys.',s:['iOS & Android Apps','UI/UX Prototyping','API Integration','Store Launch'],k:['Fl','Rn','Sw','Kt','Fb','Fg']},
+  {t:'SEO',d:'Boost your search rankings with comprehensive On-page, Off-page and Local SEO strategies.',s:['On-page SEO','Off-page SEO','Local SEO','Technical Audits'],k:['GA','GS','Ah','Sm','Gm','Lh']},
+  {t:'Meta & Google Ads',d:'Maximise your ROI with highly targeted advertising campaigns on Meta and Google Ads.',s:['Campaign Strategy','Audience Targeting','Creative Testing','ROI Tracking'],k:['Mt','Gd','GA','Px','Tm','Lk']},
+  {t:'Graphic Designing',d:'Creative logos, posters and visual identities that capture your brand\'s essence and stand out.',s:['Logos & Identity','Posters & Creatives','Packaging','Brand Guidelines'],k:['Ps','Ai','Fi','Xd','Ae','Id']},
+];
+const PROJECTS=[
+  ['E-Commerce Growth Platform',['E-commerce','Web Development']],
+  ['Brand & Website Redesign',['Branding','UI/UX']],
+  ['Local Business SEO Campaign',['SEO','Local SEO']],
+  ['Social Media Growth Engine',['Social','Meta Ads']],
+  ['Real Estate Lead Funnel',['Google Ads','Landing Page']],
+];
+const TESTI=[
+  ['SMARTINDIA.DIGITAL transformed our online presence completely. Our sales increased by 40% within the first three months of launching the new website.','Sarah Johnson','CEO, FashionNova','SJ'],
+  ['The mobile app they developed for us is seamless and user-friendly. We\'ve received amazing feedback from our customers.','Rajesh Kumar','Founder, TechSolutions','RK'],
+  ['Their SEO and Meta Ads strategies are top-notch. We now rank on the first page for all our target keywords and our CPA dropped significantly.','Amanda Lee','Marketing Manager, GreenGrocer','AL'],
+  ['The branding and graphic design work perfectly captured the luxury feel we wanted for our property listings. Professional, creative and fast.','Michael Chen','Owner, Chen Real Estate','MC'],
+];
+const TEAM=[['Tamil Maniyammai A.M','CEO & Founder','TM'],['Sangeeth Kumar','CEO & Founder','SK'],['Veena Virwani','Human Resources','VV'],['Raki','Sales Manager','R'],['Vegi Kumar','Lead Developer','VK']];
+const STEPS=[['Tailored Solutions','Every brand is unique — we shape the strategy around your goals, audience and market.'],
+  ['Project Planning','Clear roadmaps, timelines and milestones before a single pixel moves.'],
+  ['Content Creation','Design, copy and media crafted to attract, engage and convert.'],
+  ['Seamless Execution','We launch, measure and optimise for growth that lasts.']];
+const BRANDS=[['FashionNova','font-family:Georgia,serif;font-style:italic;font-weight:700'],['TechSolutions','font-weight:800;letter-spacing:-1px'],
+  ['GreenGrocer','font-weight:600;letter-spacing:2px'],['CHEN REAL ESTATE','font-weight:700;letter-spacing:3px;font-size:18px'],
+  ['Capterra ★4.8','font-weight:700'],['Google ★4.8','font-family:Arial;font-weight:600']];
+
+/* ---------- build DOM ---------- */
+const arrowSvg='<svg width="22" height="22" viewBox="0 0 16 16"><path d="M4 12L12 4M5 4h7v7" stroke="#fff" stroke-width="1.4" fill="none"/></svg>';
+const track=$('#track');
+SERVICES.forEach((s,i)=>{
+  const c=document.createElement('div');c.className='card';c.style.left=(i*360)+'px';
+  c.innerHTML=`<div class="cbg"></div><div class="dots"></div><div class="num">0${i+1}</div><div class="arr">${arrowSvg}</div>
+   <div class="ct">${s.t}</div><div class="cd">${s.d}</div>
+   <div class="cl"><div><h6>Services</h6><ul>${s.s.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+   <div><h6>Tools</h6><div class="tools">${s.k.map(x=>`<div>${x}</div>`).join('')}</div></div></div>`;
+  track.appendChild(c);
+});
+const rows=$('#rows');
+PROJECTS.forEach((p,i)=>{
+  const r=document.createElement('div');r.className='row';r.style.top=(205+i*72)+'px';
+  r.innerHTML=`<span class="n">0${i+1}</span><span class="t">${p[0]}</span><span>${p[1].map(x=>`<span class="tag">${x}</span>`).join('')}</span><span class="ra" style="margin-left:auto">${arrowSvg}</span>`;
+  r.dataset.in=(26.6+i*.08).toFixed(2);rows.appendChild(r);
+});
+const MOCKS=[
+ `<div class="mock" style="background:linear-gradient(135deg,#1d1846,#3b2e93)"><div style="height:34px;background:rgba(255,255,255,.08);display:flex;align-items:center;gap:8px;padding:0 14px"><i style="width:8px;height:8px;border-radius:50%;background:#ff6b6b"></i><i style="width:8px;height:8px;border-radius:50%;background:#ffd166"></i><i style="width:8px;height:8px;border-radius:50%;background:#06d6a0"></i><span style="margin-left:14px;font-size:10px;font-style:normal;font-weight:600;opacity:.8">SHOP • NEW ARRIVALS</span></div>
+  <div style="padding:22px"><div style="font-size:30px;font-weight:800;line-height:1.05">Mega Sale<br><span style="color:#ffb86b">Up to 40% off</span></div>
+  <div style="display:flex;gap:12px;margin-top:22px">${['#ff8a65','#7c74ff','#4dd0e1'].map(c=>`<div style="flex:1;height:120px;border-radius:12px;background:linear-gradient(160deg,${c},rgba(255,255,255,.08))"></div>`).join('')}</div></div></div>`,
+ `<div class="mock" style="background:#efe9df;color:#141414"><div style="padding:26px"><div style="font-size:12px;letter-spacing:3px;font-weight:700">BRAND STUDIO</div>
+  <div style="font-size:54px;font-weight:800;letter-spacing:-2px;margin-top:40px;line-height:.95">Bold.<br>Refined.</div>
+  <div style="position:absolute;right:30px;top:60px;width:170px;height:170px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#ffb38a,#ff6b1e 60%,#c94a0c)"></div>
+  <div style="position:absolute;left:26px;bottom:24px;display:flex;gap:10px">${['#141414','#ff6b1e','#6c63ff','#d9cfc0'].map(c=>`<i style="width:34px;height:34px;border-radius:8px;background:${c}"></i>`).join('')}</div></div></div>`,
+ `<div class="mock" style="background:linear-gradient(160deg,#0b1222,#0f2b3d)"><div style="padding:24px"><div style="font-size:12px;opacity:.6;letter-spacing:2px">ORGANIC TRAFFIC</div><div style="font-size:42px;font-weight:800">+312%</div>
+  <svg width="430" height="170" viewBox="0 0 430 170" style="margin-top:6px"><defs><linearGradient id="gg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#4dd0e1" stop-opacity=".5"/><stop offset="1" stop-color="#4dd0e1" stop-opacity="0"/></linearGradient></defs>
+  <path d="M0 150 L50 140 L100 145 L150 120 L200 110 L250 80 L300 70 L350 40 L430 12 L430 170 L0 170Z" fill="url(#gg)"/><path d="M0 150 L50 140 L100 145 L150 120 L200 110 L250 80 L300 70 L350 40 L430 12" stroke="#4dd0e1" stroke-width="3" fill="none"/></svg>
+  <div style="position:absolute;right:22px;top:24px;background:#06d6a0;color:#04221a;font-weight:800;font-size:12px;padding:6px 12px;border-radius:999px">#1 on Google</div></div></div>`,
+ `<div class="mock" style="background:linear-gradient(160deg,#2a0f3a,#5a1a5e)"><div style="padding:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px">${['#ff6b9a','#ffb86b','#7c74ff','#4dd0e1','#ff8a65','#c77dff'].map((c,i)=>`<div style="height:136px;border-radius:12px;background:linear-gradient(150deg,${c},rgba(0,0,0,.25));position:relative"><span style="position:absolute;left:8px;bottom:6px;font-size:11px;font-weight:700">♥ ${[12.4,8.1,21.7,5.6,9.9,14.2][i]}k</span></div>`).join('')}</div></div>`,
+];
+const pv=$('#pv');
+MOCKS.forEach(m=>{const d=document.createElement('div');d.className='mock';d.style.boxShadow='0 30px 80px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.08)';d.innerHTML=m;pv.appendChild(d);});
+function tcardHTML(x){return `<p><span style="font-size:30px;color:#8b84ff;line-height:0;vertical-align:-10px">“</span> ${x[0]}</p><div class="who"><div class="av">${x[3]}</div><div><b>${x[1]}</b><small>${x[2]}</small></div></div>`;}
+const tcs=[[],[]];
+['#tc1','#tc2'].forEach((sel,ci)=>{
+  for(let k=0;k<6;k++){const d=document.createElement('div');d.className='tcard';d.innerHTML=tcardHTML(TESTI[(k*2+ci)%4]);$(sel).appendChild(d);tcs[ci].push(d);}
+});
+const arc=$('#arc');const arcItems=[];
+for(let k=0;k<12;k++){const b=BRANDS[k%BRANDS.length];const d=document.createElement('div');d.className='abs';d.style.cssText+=`;white-space:nowrap;font-size:22px;color:#e8e6ff;${b[1]}`;d.textContent=b[0];arc.appendChild(d);arcItems.push(d);}
+const teamWrap=$('#teamWrap');const teamCards=[];
+TEAM.forEach((m,i)=>{const d=document.createElement('div');d.className='team';d.style.left=(130+i*240)+'px';
+  d.innerHTML=`<div class="ava">${m[2]}</div><b>${m[0]}</b><small>${m[1]}</small>`;teamWrap.appendChild(d);teamCards.push(d);});
+const stepsEl=$('#steps');const stepEls=[];
+STEPS.forEach((s,i)=>{const d=document.createElement('div');d.className='step';d.style.top=(250+i*118)+'px';
+  d.innerHTML=`<span class="sn">STEP 0${i+1}</span><h4>${s[0]}</h4><p>${s[1]}</p><div class="ln"></div>`;stepsEl.appendChild(d);stepEls.push(d);});
+const revealText='SMARTINDIA.DIGITAL operates at the intersection of creativity, strategy and technology — crafting digital experiences that attract, engage and convert.';
+const words=revealText.split(' ').map(w=>{const s=document.createElement('span');s.textContent=w+' ';$('#reveal').appendChild(s);return s;});
+const MENU=[['SM','Social Media Marketing','Grow engagement on every platform'],['WD','Web Development','Fast, custom, conversion-ready sites'],
+  ['AD','App Development','iOS & Android apps people love'],['SE','SEO','On-page, off-page & local rankings'],['AD','Meta & Google Ads','Targeted campaigns, measurable ROI'],['GD','Graphic Designing','Logos, posters & brand identity']];
+$('#menu').innerHTML=MENU.map(m=>`<div class="mi"><div class="ic">${m[0]}</div><div><b>${m[1]}</b><small>${m[2]}</small></div></div>`).join('');
+const menuItems=[...document.querySelectorAll('.mi')];
+const inEls=[...document.querySelectorAll('[data-in]')];
+const countEls=[...document.querySelectorAll('[data-count]')];
+const navLinks=[...document.querySelectorAll('.nl')];
+
+/* ---------- particle shapes ---------- */
+const N=6500;
+let seed=7;const rnd=()=>{seed=(seed*16807)%2147483647;return (seed-1)/2147483646;};
+const gauss=()=>{let u=0;for(let i=0;i<4;i++)u+=rnd();return (u-2)/2;};
+function randDir(){const z=rnd()*2-1,a=rnd()*Math.PI*2,r=Math.sqrt(1-z*z);return[r*Math.cos(a),r*Math.sin(a),z];}
+function build(fn){const a=new Float32Array(N*3);for(let i=0;i<N;i++){const p=fn(i);a[i*3]=p[0];a[i*3+1]=p[1];a[i*3+2]=p[2];}return a;}
+const SH={};
+SH.scatter=build(()=>{const d=randDir(),r=4+rnd()*6;return[d[0]*r*1.6,d[1]*r,d[2]*r];});
+SH.sphere=build(()=>{const d=randDir(),r=1.65*(rnd()<.85?(.96+rnd()*.08):Math.cbrt(rnd()));return[d[0]*r,d[1]*r,d[2]*r];});
+SH.cube=build(i=>{const s=1.25,m=rnd();
+  if(m<.45){const e=Math.floor(rnd()*12),u=rnd()*2-1,ax=e>>2,sg=e&3,a=(sg&1?1:-1)*s,b=(sg&2?1:-1)*s;const j=()=>gauss()*.03;
+    if(ax===0)return[u*s+j(),a+j(),b+j()];if(ax===1)return[a+j(),u*s+j(),b+j()];return[a+j(),b+j(),u*s+j()];}
+  if(m<.78){const f=Math.floor(rnd()*6),u=(rnd()*2-1)*s,v=(rnd()*2-1)*s,w=(f&1?1:-1)*s;return f<2?[w,u,v]:f<4?[u,w,v]:[u,v,w];}
+  const a=rnd()*Math.PI*4,h=rnd()*2-1;return[Math.cos(a)*.5*(1-h*h)+gauss()*.12,h*s,Math.sin(a)*.5+gauss()*.12];});
+SH.phone=build(()=>{const w=.95,h=1.85,r=.28,m=rnd();
+  const rim=()=>{const tt=rnd();const L=2*(w-r)*2+2*(h-r)*2+2*Math.PI*r;let d=tt*L;
+    const sx=2*(w-r),sy=2*(h-r);
+    if(d<sx)return[-w+r+d,h];d-=sx;if(d<Math.PI*r/2){const a=d/r;return[w-r+Math.sin(a)*r,h-r+Math.cos(a)*r];}d-=Math.PI*r/2;
+    if(d<sy)return[w,h-r-d];d-=sy;if(d<Math.PI*r/2){const a=d/r;return[w-r+Math.cos(a)*r,-h+r-Math.sin(a)*r];}d-=Math.PI*r/2;
+    if(d<sx)return[w-r-d,-h];d-=sx;if(d<Math.PI*r/2){const a=d/r;return[-w+r-Math.sin(a)*r,-h+r-Math.cos(a)*r];}d-=Math.PI*r/2;
+    if(d<sy)return[-w,-h+r+d];d-=sy;const a=d/r;return[-w+r-Math.cos(a)*r,h-r+Math.sin(a)*r];};
+  if(m<.5){const p=rim();return[p[0],p[1],(rnd()<.5?-1:1)*.12+gauss()*.02];}
+  if(m<.85){const gx=Math.round((rnd()*2-1)*(w-.12)/.09)*.09,gy=Math.round((rnd()*2-1)*(h-.2)/.09)*.09;return[gx,gy,.12];}
+  const a=rnd()*Math.PI*2;return[Math.cos(a)*.12,-h+.22+Math.sin(a)*.12,.13];});
+SH.bars=build(()=>{const m=rnd();
+  if(m<.8){const b=Math.floor(rnd()*4),hh=[.9,1.45,2.0,2.7][b],x0=-1.5+b*.85,w=.5,f=rnd();
+    let x=x0+rnd()*w,y=-1.4+rnd()*hh,z=(rnd()*2-1)*.25;
+    if(f<.3)x=x0+(rnd()<.5?0:w);else if(f<.55)z=(rnd()<.5?-.25:.25);else if(f<.7)y=-1.4+hh;
+    return[x,y,z];}
+  const u=rnd();if(u<.75){const s=rnd();return[-1.6+s*3.2+gauss()*.03,-.6+s*2.2+gauss()*.03,.4];}
+  const s=rnd()*.5;return rnd()<.5?[1.6-s,1.6-s*.05+gauss()*.02,.4]:[1.6-s*.1,1.6-s+gauss()*.02,.4];});
+function astroid(cx,cy,r){for(;;){const x=(rnd()*2-1)*r,y=(rnd()*2-1)*r;const q=Math.pow(Math.abs(x),2/3)+Math.pow(Math.abs(y),2/3);const R=Math.pow(r,2/3);
+  if(q<=R){const edge=q/R;if(rnd()<.35&&edge<.75)continue;return[cx+x,cy+y,(rnd()*2-1)*.22*(1-edge)];}}}
+SH.stars=build(()=>{const m=rnd();return m<.62?astroid(-.35,.25,1.75):m<.88?astroid(1.25,-.95,.85):astroid(-1.45,-1.35,.5);});
+SH.gem=build(()=>{const tab=.75,gir=1.55,yt=.75,yg=.3,ya=-1.55,n=8,m=rnd();
+  const k=Math.floor(rnd()*n),a0=k/n*Math.PI*2,a1=(k+1)/n*Math.PI*2,u=rnd();
+  const P=(r,a,y)=>[Math.cos(a)*r,y,Math.sin(a)*r];const L=(p,q,s)=>[lerp(p[0],q[0],s),lerp(p[1],q[1],s),lerp(p[2],q[2],s)];
+  if(m<.18)return L(P(tab,a0,yt),P(tab,a1,yt),u);
+  if(m<.36)return L(P(gir,a0,yg),P(gir,a1,yg),u);
+  if(m<.52)return L(P(tab,a0,yt),P(gir,(a0+a1)/2,yg),u);
+  if(m<.7)return L(P(gir,a0,yg),[0,ya,0],u);
+  if(m<.85){const r=Math.sqrt(rnd())*tab,a=rnd()*Math.PI*2;return P(r,a,yt);}
+  const s=rnd(),a=rnd()*Math.PI*2;return P(gir*(1-s)*Math.sqrt(rnd()),a,lerp(yg,ya,s));});
+SH.knot=build(()=>{const t=rnd()*Math.PI*2,p=2,q=3,R=1.05,r=.45;
+  const pt=s=>[(R+r*Math.cos(q*s))*Math.cos(p*s),(R+r*Math.cos(q*s))*Math.sin(p*s),r*Math.sin(q*s)*1.6];
+  const c=pt(t),d=randDir(),tr=.16*Math.sqrt(rnd());return[c[0]*1.15+d[0]*tr,c[1]*1.15+d[1]*tr,c[2]+d[2]*tr];});
+const INDIA=[[74.5,37],[77.8,35.5],[79.5,32.5],[78.8,31],[81,30.2],[84,28.5],[88,27.9],[88.8,27.2],[92,27.8],[95.5,29.2],[97.3,27.8],[96,27.2],[95,26],[94.5,24.5],[93.3,23.5],[92.4,24.9],[91.5,24.1],[91.9,22.9],[89.5,22],[88.5,21.6],[87,21.4],[86.5,20.2],[85,19.3],[83.5,18],[82,16.6],[80.3,15.8],[80.2,13.5],[79.9,11.5],[79.8,10.3],[78.2,8.9],[77.5,8.1],[76.6,8.9],[76,10.5],[75.5,11.8],[74.6,13.9],[73.9,15.6],[73,17.8],[72.8,19.5],[72.7,21],[70.5,20.8],[69,22.3],[70,22.9],[68.3,23.6],[69.6,24.3],[71,24.4],[70.6,25.7],[70.1,26.6],[71.9,27.8],[73.4,29.9],[74.6,31],[74.6,32.5],[73.8,34.3]];
+function inPoly(x,y,P){let c=false;for(let i=0,j=P.length-1;i<P.length;j=i++){const[xi,yi]=P[i],[xj,yj]=P[j];if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi))c=!c;}return c;}
+const MAPK=.095,MAPC=[82.6,22.3];
+const geo=(lon,lat)=>[(lon-MAPC[0])*MAPK,(lat-MAPC[1])*MAPK,0];
+const mapDots=[];for(let lat=7.8;lat<37.5;lat+=.62)for(let lon=68;lon<97.6;lon+=.62)if(inPoly(lon,lat,INDIA))mapDots.push(geo(lon,lat));
+SH.map=build(i=>{const d=mapDots[i%mapDots.length];return[d[0]+gauss()*.012,d[1]+gauss()*.012,d[2]+gauss()*.03];});
+SH.planet=build(()=>{if(rnd()<.6){const d=randDir(),r=1.3*(.97+rnd()*.06);return[d[0]*r,d[1]*r,d[2]*r];}
+  const a=rnd()*Math.PI*2,r=1.85+Math.pow(rnd(),.8)*.95;return[Math.cos(a)*r,gauss()*.025,Math.sin(a)*r];});
+const SERVICE_SHAPES=['stars','cube','phone','bars','gem','knot'];
+
+/* per-particle randoms */
+const jit=new Float32Array(N*3),aSize=new Float32Array(N),aAlpha=new Float32Array(N),wisp=new Float32Array(N);
+for(let i=0;i<N;i++){const d=randDir(),m=.4+rnd();jit[i*3]=d[0]*m;jit[i*3+1]=d[1]*m;jit[i*3+2]=d[2]*m;
+  aSize[i]=rnd()<.04?2.4:.55+rnd()*.9;aAlpha[i]=1;wisp[i]=rnd();}
+const NW=Math.floor(N*.11);  // first NW particles of the sphere drift off as "dust"
+
+/* ---------- three.js ---------- */
+const canvas=$('#gl');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true,preserveDrawingBuffer:true});
+renderer.setPixelRatio(1);renderer.setSize(1440,810,false);renderer.setClearColor(0x000000,0);
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(35,1440/810,.1,100);camera.position.set(0,0,10);
+const geom=new THREE.BufferGeometry();
+const pos=new Float32Array(N*3);
+geom.setAttribute('position',new THREE.BufferAttribute(pos,3));
+geom.setAttribute('aSize',new THREE.BufferAttribute(aSize,1));
+const alphaAttr=new THREE.BufferAttribute(aAlpha,1);geom.setAttribute('aAlpha',alphaAttr);
+const mat=new THREE.ShaderMaterial({transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,
+  uniforms:{uSize:{value:3.4},uOpacity:{value:1}},
+  vertexShader:`attribute float aSize;attribute float aAlpha;uniform float uSize;uniform float uOpacity;varying float vA;varying float vT;
+    void main(){vec4 mv=modelViewMatrix*vec4(position,1.);gl_Position=projectionMatrix*mv;gl_PointSize=uSize*aSize*(10./-mv.z);
+    vA=aAlpha*uOpacity*(.35+.65*smoothstep(-12.,-8.3,mv.z));vT=clamp(aSize-.55,0.,1.);}`,
+  fragmentShader:`varying float vA;varying float vT;void main(){float d=length(gl_PointCoord-.5);float a=pow(smoothstep(.5,0.,d),1.6);
+    vec3 c=mix(vec3(.62,.6,1.),vec3(1.,1.,1.),vT);gl_FragColor=vec4(c,a*vA);}`});
+const points=new THREE.Points(geom,mat);
+const group=new THREE.Group();group.add(points);scene.add(group);
+
+/* particle state for time t */
+const W=(sx)=>(sx-720)/PX, H=(sy)=>(405-sy)/PX;
+function pstate(t,homeScroll,aboutScroll){
+  const S={A:'sphere',B:'sphere',m:0,amp:0,op:1,x:0,y:H(440),rx:.15,ry:t*.28,rz:0,sc:1,wisp:1,size:3.4};
+  if(t<4.6){S.A='scatter';S.B='sphere';S.m=eout(seg(t,2.55,4.6));S.op=seg(t,2.55,3.2);S.wisp=seg(t,3.6,4.6);}
+  else if(t<11.6){}
+  else if(t<13.05){S.B=SERVICE_SHAPES[0];const p=eio(seg(t,11.6,13.05));S.m=p;S.amp=Math.sin(Math.PI*p)*1.1;
+    S.x=lerp(0,W(305),p);S.y=lerp(H(440),H(400),p);S.wisp=1-p;S.ry=lerp(t*.28,.35*Math.sin(t*.6)+.25,p);S.rx=lerp(.15,.2,p);}
+  else if(t<25.7){const af=activeF(t),k=Math.floor(af),f=af-k;
+    S.A=SERVICE_SHAPES[k];S.B=SERVICE_SHAPES[Math.min(5,k+1)];S.m=f;S.amp=Math.sin(Math.PI*f)*1.0;S.wisp=0;
+    S.x=W(305);S.y=H(400);S.ry=.35*Math.sin(t*.6)+.25;S.rx=.2;}
+  else if(t<27.2){S.A=SERVICE_SHAPES[5];S.B='scatter';const p=eio(seg(t,25.7,27.2));S.m=p*.35;S.amp=p*1.4;S.op=1-seg(t,25.8,26.8);S.wisp=0;
+    S.x=W(305);S.y=H(400)+(homeScroll-810)/PX;S.ry=.35*Math.sin(t*.6)+.25;S.rx=.2;}
+  else if(t<45.4){S.op=0;}
+  else if(t<49.6){S.A='scatter';S.B='map';S.m=eout(seg(t,45.4,47.0));S.op=seg(t,45.4,46.0)*(1-seg(t,48.7,49.4));S.wisp=0;
+    S.x=W(390);S.y=H(575)+(aboutScroll-810)/PX;S.rx=-.42;S.ry=.28*Math.sin(t*.55)+.12;S.size=4.2;}
+  else if(t<56.6){S.op=0;}
+  else{S.A='scatter';S.B='planet';S.m=eout(seg(t,56.6,58.0));S.op=seg(t,56.6,57.2);S.wisp=0;
+    S.x=W(1060);S.y=H(400)+(aboutScroll-3840)/PX;S.rx=.38;S.ry=t*.22;S.rz=-.32;S.sc=1.05;}
+  return S;
+}
+function activeF(t){const u=clamp((t-13.4)/2.05,0,5.999);const k=Math.floor(u),f=u-k;return Math.min(5,k+eio(seg(f,.72,1)));}
+
+function updateParticles(t,S){
+  const A=SH[S.A],B=SH[S.B],m=S.m,amp=S.amp;
+  const wA=(S.A==='sphere'?1-m:0)+(S.B==='sphere'?m:0),wW=wA*S.wisp;
+  for(let i=0;i<N;i++){const j=i*3;
+    let x=A[j]+(B[j]-A[j])*m,y=A[j+1]+(B[j+1]-A[j+1])*m,z=A[j+2]+(B[j+2]-A[j+2])*m;
+    const n=amp*(.6+.4*Math.sin(t*2.1+i*.37));x+=jit[j]*n;y+=jit[j+1]*n;z+=jit[j+2]*n;
+    let al=1;
+    if(i<NW&&wW>0){const life=(wisp[i]+t*.22)%1;const d=1.1*life*wW;
+      x+=(-1.0+jit[j]*.35)*d*1.4;y+=(-.45+jit[j+1]*.4)*d;z+=jit[j+2]*d*.5;al=1-wW*life*life;}
+    // subtle breathing
+    const b=1+.012*Math.sin(t*1.7+i*.013);
+    pos[j]=x*b;pos[j+1]=y*b;pos[j+2]=z*b;aAlpha[i]=al;}
+  geom.attributes.position.needsUpdate=true;alphaAttr.needsUpdate=true;
+  mat.uniforms.uOpacity.value=S.op;mat.uniforms.uSize.value=S.size;
+  group.position.set(S.x,S.y,0);group.rotation.set(S.rx,S.ry,S.rz);group.scale.setScalar(S.sc);
+  renderer.render(scene,camera);
+}
+const toScreen=(v)=>{const p=v.clone().applyMatrix4(group.matrixWorld).project(camera);return[(p.x+1)/2*1440,(1-p.y)/2*810];};
+
+/* ---------- cursor path ---------- */
+const CUR=[[0,1040,560],[2.6,1040,560],[4.2,880,520],[6.5,760,470],[9,840,540],[11.4,980,610],[13.6,1060,330],[15.2,760,330],[25.4,780,360],
+  [27.0,560,250],[27.7,520,241],[28.5,520,313],[29.4,520,385],[30.3,520,457],[31.6,880,520],[34.4,760,420],[36.8,700,330],
+  [38.6,250,290],[39.7,250,292],[40.55,640,42],[40.9,640,42],[42.6,880,400],[44.4,1030,410],[45.9,420,560],[48.3,640,520],
+  [50.2,720,330],[52.6,722,470],[54.4,900,520],[56.4,620,420],[57.9,260,500],[58.8,712,42],[60,800,220]];
+const CLICKS=[40.65,58.85];
+
+/* ---------- scroll timelines ---------- */
+const HOME=[[0,0],[11.6,0],[13.05,810],[25.75,810],[27.0,1620],[30.75,1620],[31.8,2430],[34.6,2430],[35.6,3240],[37.0,3240],[38.2,3700]];
+const ABOUT=[[41.2,0],[44.7,0],[45.85,810],[48.7,810],[49.65,1620],[51.2,1620],[52.15,2220],[54.25,2220],[55.15,3030],[56.6,3030],[57.6,3840]];
+
+/* ---------- master render ---------- */
+function render(t){
+  const homeScroll=kf(t,HOME),aboutScroll=kf(t,ABOUT);
+  const onAbout=t>=40.95;
+  // outer frame shimmer
+  $('#ogTop').style.opacity=.85+.15*Math.sin(t*.7);
+  $('#ogBand').style.opacity=.85+.15*Math.sin(t*.5+1);
+  $('#ogBeam').style.transform=`rotate(${28+3*Math.sin(t*.35)}deg)`;
+
+  // loader
+  const pct=Math.round(eio(seg(t,.15,2.05))*100);
+  $('#ldPct').textContent=pct+'%';$('#ldFill').style.height=pct+'%';
+  const lu=eio(seg(t,2.15,2.7));$('#loader').style.transform=`translateY(${-lu*810}px)`;$('#loader').style.display=lu>=1?'none':'block';
+
+  // pages
+  $('#home').style.transform=`translateY(${-homeScroll}px)`;
+  $('#about').style.transform=`translateY(${-aboutScroll}px)`;
+  $('#home').style.display=onAbout?'none':'block';$('#about').style.display=onAbout?'block':'none';
+  $('#curtain').style.opacity=t<40.95?seg(t,40.65,40.95):1-seg(t,40.95,41.35);
+  navLinks.forEach((l,i)=>l.classList.toggle('on',(i===0&&!onAbout)||(i===1&&onAbout)));
+  $('#nav').style.opacity=seg(t,2.6,3.1);$('#nav').style.transform=`translateY(${(1-eout(seg(t,2.6,3.2)))*-20}px)`;
+
+  // scrollbar
+  const sp=onAbout?aboutScroll/3840:homeScroll/3700;$('#thumb').style.top=(sp*(810-16-90))+'px';
+
+  // generic entrances
+  for(const el of inEls){const e=eout(seg(t,+el.dataset.in,+el.dataset.in+.75));el.style.opacity=e;
+    el.style.transform=`translateY(${(1-e)*34}px)`;}
+  for(const el of countEls){const e=eout(seg(t,+el.dataset.c0,+el.dataset.c0+1.4));const v=+el.dataset.count*e;
+    el.textContent=(el.dataset.dec?v.toFixed(1):Math.round(v))+(el.dataset.suf||'');}
+
+  // hero: big text parallax
+  $('#heroBig').style.transform+=` translateX(${-t*4}px)`;
+  $('#beam').style.opacity=.7+.3*Math.sin(t*.8);
+
+  // services cards
+  const af=activeF(t);
+  $('#track').style.transform+=` translateX(${-af*360}px)`;
+  [...track.children].forEach((c,i)=>{const a=clamp(1-Math.abs(i-af));
+    c.querySelector('.cbg').style.opacity=a;c.querySelector('.num').style.opacity=1-a;c.querySelector('.dots').style.opacity=1-a;
+    c.querySelector('.cd').style.opacity=clamp(a*1.6-.6);c.querySelector('.cl').style.opacity=clamp(a*1.6-.6);
+    const ct=c.querySelector('.ct');ct.style.top=lerp(392,28,eio(a))+'px';ct.style.fontSize=lerp(19,26,a)+'px';
+    c.style.opacity=clamp(1-(af-i)*1.2);c.style.transform=`translateY(${(a)*-6}px)`;
+    c.style.boxShadow=a>.01?`0 20px 60px rgba(90,80,230,${.45*a})`:'none';});
+
+  // case studies
+  const act=kf(t,[[26.9,0],[27.6,0],[28.2,1],[28.5,1],[29.1,2],[29.4,2],[30.0,3],[30.75,3]],x=>x);
+  [...rows.children].forEach((r,i)=>{const a=clamp(1-Math.abs(i-act)*1.6);
+    r.style.background=`rgba(255,255,255,${.05*a})`;r.querySelector('.t').style.color=`rgba(255,255,255,${.55+.45*a})`;
+    r.querySelector('.ra').style.opacity=a;});
+  [...pv.children].forEach((m,i)=>{const d=i-act;const a=clamp(1-Math.abs(d)*1.4);
+    m.style.opacity=a;m.style.transform=`translateY(${d*40}px) scale(${.94+.06*a})`;});
+  $('#pv').style.transform=`rotateY(${-10+3*Math.sin(t*.9)}deg) rotateX(${4+2*Math.sin(t*.7)}deg) translateY(${(act-1.5)*14}px)`;
+
+  // testimonials columns
+  tcs.forEach((col,ci)=>{let y=(ci?140:40)-(t-30.5)*(ci?26:34);
+    col.forEach(d=>{d.style.top=y+'px';y+=d.offsetHeight+20;});});
+
+  // trusted arc (items riding a 3D horizon)
+  const cx=720,cy=260+300,rx=820,ry=300;
+  arcItems.forEach((d,k)=>{let th=(k/arcItems.length)*Math.PI*2-(t-34)*.16;th=Math.atan2(Math.sin(th),Math.cos(th));
+    const vis=Math.abs(th)<1.45;const x=cx+rx*Math.sin(th),y=cy-ry*Math.cos(th);
+    const ang=Math.atan2(ry*Math.sin(th),rx*Math.cos(th))*180/Math.PI;const depth=Math.cos(th);
+    d.style.left=x+'px';d.style.top=(y-34)+'px';d.style.opacity=vis?clamp(depth*1.6)*seg(t,35.3,36):0;
+    d.style.transform=`translate(-50%,-50%) rotate(${ang}deg) scale(${.65+.45*depth}) perspective(400px) rotateX(${(1-depth)*35}deg)`;});
+
+  // CTA wave
+  const ph=t*.9;let svg='';
+  for(let w=0;w<3;w++){let d=`M0 300 L0 ${120+w*30}`;for(let x=0;x<=1200;x+=40){const y=110+w*28+Math.sin(x/190+ph+w*1.3)*38+Math.sin(x/90-ph*.7+w)*14-(x>500&&x<900?50*Math.sin((x-500)/400*Math.PI):0);d+=` L${x} ${y}`;}
+    d+=' L1200 0 L0 0 Z';svg+=`<path d="${d}" fill="${['#4b2fd6','#7a3ff0','#2c1fa0'][w]}" opacity="${[.55,.35,.5][w]}" transform="scale(1,-1) translate(0,-300)"/>`;}
+  $('#wave').innerHTML=svg;
+  const secs=Math.floor(10*3600+30*60+12+t);const hh=Math.floor(secs/3600)%12||12,mm=Math.floor(secs/60)%60,ss=secs%60;
+  $('#clock').textContent=`${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;
+
+  // about
+  $('#marq').style.transform=`translateX(${-((t-41)*90)%1400}px)`;
+  const rv=seg(t,45.9,48.4);words.forEach((w,i)=>{const p=clamp(rv*words.length*1.15-i);w.style.color=`rgba(255,255,255,${.16+.84*p})`;});
+  teamCards.forEach((c,i)=>{const e=eout(seg(t,51.8+i*.12,52.8+i*.12));const hov=i===2?eio(seg(t,52.7,53.2))*(1-seg(t,53.9,54.3)):0;
+    c.style.opacity=e;c.style.transform=`translateY(${(1-e)*80-hov*14}px) rotateX(${(1-e)*-40}deg)`;
+    c.style.borderColor=`rgba(140,130,255,${.09+hov*.6})`;});
+  stepEls.forEach((s,i)=>{const e=eout(seg(t,54.95+i*.18,55.9+i*.18));s.style.opacity=e;s.style.transform=`translateX(${(1-e)*-40}px)`;
+    s.querySelector('.ln').style.width=(1200*eio(seg(t,55+i*.18,56.2+i*.18)))+'px';});
+
+  // menu dropdown at the end
+  const mo=eout(seg(t,58.9,59.3));$('#menu').style.opacity=mo;$('#menu').style.transform=`translateY(${(1-mo)*-12}px)`;$('#menu').style.display=mo>0?'grid':'none';
+  menuItems.forEach((m,i)=>m.style.background=i===1&&t>59.5?'rgba(255,255,255,.06)':'transparent');
+
+  // cursor + click ripple
+  const cxp=kf(t,CUR.map(k=>[k[0],k[1]])),cyp=kf(t,CUR.map(k=>[k[0],k[2]]));
+  $('#cursor').style.transform=`translate(${cxp}px,${cyp}px)`;
+  let rp=0;for(const c of CLICKS){if(t>=c&&t<c+.5)rp=(t-c)/.5;}
+  $('#ripple').style.display=rp?'block':'none';$('#ripple').style.left=cxp+2+'px';$('#ripple').style.top=cyp+2+'px';
+  $('#ripple').style.transform=`scale(${.4+rp*1.4})`;$('#ripple').style.opacity=1-rp;
+
+  // particles
+  const S=pstate(t,homeScroll,aboutScroll);
+  updateParticles(t,S);
+  // glow + map pin follow the particle group
+  const [gx,gy]=toScreen(new THREE.Vector3(0,0,0));
+  $('#pglow').style.left=gx+'px';$('#pglow').style.top=gy+'px';$('#pglow').style.opacity=S.op*(S.B==='map'?.45:1);
+  const pinOn=S.B==='map'?S.op*seg(t,46.6,47.1):0;
+  if(onAbout){// pin lives in the section at page-y 810, and the page is shifted by -aboutScroll
+    const[px,py]=toScreen(new THREE.Vector3(...geo(77.34,11.1)));const top=py-810+aboutScroll;
+    $('#pin').style.left=px+'px';$('#pin').style.top=top+'px';
+    $('#pin').style.transform=`scale(${1+.25*Math.sin(t*6)})`;$('#pin').style.opacity=pinOn;
+    $('#pinLbl').style.left=(px+18)+'px';$('#pinLbl').style.top=(top-14)+'px';$('#pinLbl').style.opacity=pinOn;}
+}
+window.renderAt=render;
+window.DURATION=DURATION;
+await document.fonts.ready;
+render(0);
+window.ready=true;
+if(location.search.includes('play')){const t0=performance.now();const sp=+(new URLSearchParams(location.search).get('t')||0);
+  const loop=()=>{render((sp+(performance.now()-t0)/1000)%DURATION);requestAnimationFrame(loop);};loop();}
+else if(location.search.includes('at=')){render(+new URLSearchParams(location.search).get('at'));}
+</script>
+</body>
+</html>
