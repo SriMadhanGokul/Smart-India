@@ -1,5 +1,5 @@
 // HTML builders shared by the desktop stage and the lite layout, plus the testimonial switcher.
-import { CLIENTS, FACTS, ICON, MEDIA, SERVICE_CARDS, TESTIMONIALS, WORK, href } from './content.js';
+import { CLIENTS, CTA, FACTS, ICON, MEDIA, SERVICE_CARDS, TESTIMONIALS, WORK, href } from './content.js';
 import { $, $$, words, initRoll } from './ui.js';
 
 const star = c => `<svg width="22" height="18" viewBox="0 0 22 18" aria-hidden="true"><path d="M11 1 L13.5 7 L20 7.3 L15 11.4 L16.8 17.5 L11 14 L5.2 17.5 L7 11.4 L2 7.3 L8.5 7 Z" fill="none" stroke="${c}" stroke-width="1.2"/></svg>`;
@@ -74,7 +74,7 @@ export function mountTestimonials(root, desktop) {
     <div class="t-body${P('left:964px;top:774px;width:749px')}">
       <blockquote class="h34 t-q" aria-live="polite"></blockquote>
       <div class="t-who"><span class="t-av" aria-hidden="true"></span><p class="p17"><b class="t-n"></b><br><span class="t-r"></span></p></div>
-      <a class="btn roll" href="${href('contact/')}"><span data-t="Become a client"></span><b>→</b></a>
+      <a class="btn roll" href="${href(CTA.discuss)}"><span data-t="Become a client"></span><b>→</b></a>
     </div>
     <div class="t-arrows${P('left:190px;top:1022px')}"><button type="button" aria-label="Previous testimonial">←</button><button type="button" aria-label="Next testimonial">→</button></div>
     ${desktop ? '<div class="a hr dkhr" style="left:38px;top:1242px;width:1844px"></div><div class="a plus dk" style="left:946px;top:1231px">+</div>' : ''}`;

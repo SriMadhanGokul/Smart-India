@@ -1,5 +1,5 @@
 // Shared page chrome: <head>, header, menu overlay and footer. Rendered at build time for every page.
-import { BRAND, CONTACT, FOOTER, NAV, SOCIAL, TAGLINE, markSVG } from '../src/data.js';
+import { BRAND, CONTACT, CTA, FOOTER, NAV, SOCIAL, TAGLINE, markSVG } from '../src/data.js';
 
 export const esc = s => String(s).replace(/&(?!(?:[a-z]+|#\d+);)/gi, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 // Hover text-roll: two stacked copies of a label (see [data-t] in styles.css).
@@ -7,9 +7,10 @@ export const roll = t => `<span data-t="${esc(t)}"><i>${esc(t)}</i><i aria-hidde
 
 // Runs before first paint: chooses the layout, sets the frame scale, and notes an in-site page change.
 // Must stay in sync with the checks in main.js / page.js, which read window.__wantsLite.
-const BOOT = `(function(d,w){var r=d.documentElement;w.__wantsLite=function(){return matchMedia('(prefers-reduced-motion: reduce)').matches||!w.WebGLRenderingContext||innerWidth<1100||innerWidth/innerHeight<1.2};
-w.__frameVars=function(){var W=innerWidth,H=innerHeight,u=Math.min(W/1920,H/868),s=r.style;s.setProperty('--u',u.toFixed(5));s.setProperty('--nu',w.__wantsLite()?'.78':Math.max(u,.62).toFixed(4));s.setProperty('--ox',((W-1920*u)/2).toFixed(2)+'px');s.setProperty('--oyc',((H-868*u)/2).toFixed(2)+'px');s.setProperty('--oyb',(H-868*u).toFixed(2)+'px')};
-var c=' js '+(w.__wantsLite()?'lite':'full');try{if(sessionStorage.getItem('si-wipe'))c+=' wiped';if(sessionStorage.getItem('si-seen'))c+=' seen'}catch(e){}r.className+=c;w.__frameVars()})(document,window)`;
+const BOOT = `(function(d,w){var r=d.documentElement,rm=matchMedia('(prefers-reduced-motion: reduce)');w.__wantsLite=function(){return rm.matches||!w.WebGLRenderingContext||innerWidth<1100||innerWidth/innerHeight<1.2};
+w.__vh=function(){var p=d.createElement('div');p.style.cssText='position:fixed;top:0;width:0;height:100lvh;visibility:hidden';r.appendChild(p);var h=p.offsetHeight;r.removeChild(p);return h||innerHeight};
+w.__frameVars=function(){var l=w.__wantsLite(),W=innerWidth,H=l?w.__vh():innerHeight,u=Math.min(W/(l?560:1920),H/868),s=r.style;s.setProperty('--u',u.toFixed(5));s.setProperty('--nu',l?'.78':Math.max(u,.62).toFixed(4));s.setProperty('--ox',((W-1920*u)/2).toFixed(2)+'px');s.setProperty('--oyc',((H-868*u)/2).toFixed(2)+'px');s.setProperty('--oyb',(H-868*u).toFixed(2)+'px')};
+var c=' js '+(w.__wantsLite()?'lite':'full'),no3d=false;try{no3d=!!sessionStorage.getItem('si-no3d');if(sessionStorage.getItem('si-wipe'))c+=' wiped';if(sessionStorage.getItem('si-seen'))c+=' seen'}catch(e){}if(w.WebGLRenderingContext&&!rm.matches&&!no3d)c+=' gl';r.className+=c;w.__frameVars()})(document,window)`;
 
 export const head = ({ title, desc, path = '', styles = [] }) => `<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -41,7 +42,7 @@ export const header = base => `<div id="wipe" aria-hidden="true"><i></i><i></i><
     <button id="navSnd" type="button" aria-label="Play ambient sound" aria-pressed="false">
       <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 5h2.5L8 2v10L4.5 9H2z" fill="currentColor"/><path class="off" d="M10 4l3 6M13 4l-3 6" stroke="currentColor" stroke-width="1.1"/><path class="on" d="M10 4.5q2 2.5 0 5M11.5 3q3.4 4 0 8" stroke="currentColor" stroke-width="1.1" fill="none"/></svg>
     </button>
-    <a id="navTalk" class="pill roll" href="${base}contact/">${roll('Let\'s talk')}</a>
+    <a id="navTalk" class="pill roll" href="${base}${CTA.discuss}">${roll('Let\'s talk')}</a>
     <button id="navMenu" class="pill roll" type="button" aria-expanded="false" aria-controls="menu"><span data-t="Menu" id="navMenuT"><i>Menu</i><i aria-hidden="true">Menu</i></span><i aria-hidden="true"></i></button>
   </div>
 </header>`;
@@ -69,8 +70,8 @@ export const footer = base => `<footer id="footer" data-theme="dark">
     <div class="fclock cap" id="clock" aria-label="Local time in Tirupur"></div>
     <h2 class="fHead">${FOOTER.heading}</h2>
     <div class="fcta">
-      <a class="btn roll" href="${base}contact/">${roll('Discuss your project')}<b>→</b></a>
-      <a class="btn roll" href="tel:${CONTACT.tel}">${roll('Book a free call')}<b>→</b></a>
+      <a class="btn roll" href="${base}${CTA.discuss}">${roll('Discuss your project')}<b>→</b></a>
+      <a class="btn roll" href="${base}${CTA.call}">${roll('Book a free call')}<b>→</b></a>
     </div>
     <div class="finfo">
       <div class="cap dim">Business enquiry</div>

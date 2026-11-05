@@ -1,6 +1,6 @@
 // Every inner page of the site. Each route renders to real, static HTML at build time.
 import {
-  ABOUT, BLOG, BRAND, CONTACT, FACTS, FAQ, HERO, ICON, INDUSTRIES, PLANS, POINTS, PROJECTS, RATINGS, SERVICES, STEPS,
+  ABOUT, BLOG, BRAND, CONTACT, CTA, FACTS, FAQ, HERO, ICON, INDUSTRIES, PLANS, POINTS, PROJECTS, RATINGS, SERVICES, STEPS,
   TAGLINE, TEAM, TESTIMONIALS, VALUES,
 } from '../src/data.js';
 import { esc, roll, shell } from './layout.js';
@@ -112,7 +112,7 @@ const services = L => hero(L, {
   <h2 class="t2 rv">Do you offer custom website or app development?</h2>
   <div>
     <p class="t3 rv">Yes, we specialize in building custom, scalable solutions from scratch using modern technologies like Laravel, React, and Flutter.</p>
-    <div class="btn-row rv">${btn(L('projects/'), 'View our projects')}${btn(L('contact/'), 'Let’s talk')}</div>
+    <div class="btn-row rv">${btn(L('projects/'), 'View our projects')}${btn(L(CTA.discuss), 'Let’s talk')}</div>
   </div>
 </div>
 <div class="inds rv"><div class="cap">We work across diverse industries</div><ul class="t4">${INDUSTRIES.map(i => `<li>${esc(i)}</li>`).join('')}</ul></div>`) + process();
@@ -131,7 +131,7 @@ const service = (L, s, i) => {
         <h2 class="t4">Contact with us for any advice</h2>
         <p class="sm">Need help? Talk to an expert</p>
         <a class="t4 sd-tel" href="tel:${CONTACT.tel}">${CONTACT.phone}</a>
-        ${btn(L('contact/'), 'Discuss your project')}
+        ${btn(L(CTA.discuss), 'Discuss your project')}
       </div>
     </aside>
     <div class="sd-main">
@@ -175,7 +175,7 @@ const project = (L, p, i) => {
   ${voice ? quote(voice) : ''}`) + sec('white', `<div class="cta center">
     <h2 class="t2 rv">Ready to build your own success story?</h2>
     <p class="tx rv">Let’s discuss how we can transform your vision into a world-class digital product.</p>
-    ${btn(L('contact/'), 'Start your project', 'rv')}
+    ${btn(L(CTA.discuss), 'Start your project', 'rv')}
   </div>`) + nextLink(projectHref(L, next), 'Next project', next.name);
 };
 
@@ -184,7 +184,7 @@ const team = L => hero(L, {
   trail: [['Home', ''], ['Team']],
 }) + sec('dark', `<div class="trows">${TEAM.map(([n, r]) => `<div class="trow rv"><span class="t-av" aria-hidden="true">${initials(n)}</span><h2 class="t2">${esc(n)}</h2><p class="cap">${esc(r)}</p></div>`).join('')}</div>
 ${hrPlus()}
-<div class="center tm-cta"><p class="t3 rv">Want to work with us?</p><div class="btn-row rv">${btn(L('contact/'), 'Let’s talk')}${btn(L('about/'), 'About us')}</div></div>`);
+<div class="center tm-cta"><p class="t3 rv">Want to work with us?</p><div class="btn-row rv">${btn(L(CTA.discuss), 'Let’s talk')}${btn(L('about/'), 'About us')}</div></div>`);
 
 const pricing = L => hero(L, {
   kick: 'Pricing', title: 'Pricing',
@@ -195,10 +195,10 @@ const pricing = L => hero(L, {
     <h2 class="t3">${esc(p.title)}</h2>
     <p class="sm">${esc(p.text)}</p>
     <ul class="plus-list">${p.points.map(x => `<li class="sm">${esc(x)}</li>`).join('')}</ul>
-    ${btn(L('contact/'), 'Get started')}
+    ${btn(L(CTA.discuss), 'Get started')}
   </article>`).join('')}</div>
   ${hrPlus()}
-  <div class="center tm-cta"><p class="t3 rv">Our goal is to provide high-quality results with a clear ROI for your business.</p><div class="btn-row rv">${btn(L('contact/'), 'Ask for a quote')}${btn(L('faq/'), 'Read the FAQ')}</div></div>`);
+  <div class="center tm-cta"><p class="t3 rv">Our goal is to provide high-quality results with a clear ROI for your business.</p><div class="btn-row rv">${btn(L(CTA.discuss), 'Ask for a quote')}${btn(L('faq/'), 'Read the FAQ')}</div></div>`);
 
 const testimonials = L => hero(L, {
   kick: 'Testimonial', title: 'What Clients Say About Us',
@@ -212,7 +212,7 @@ const faq = L => hero(L, {
   kick: 'Faqs', title: 'Have Questions in Your Mind? Get the Answers Now',
   trail: [['Home', ''], ['FAQ']],
 }) + sec('light', `<div class="split">
-  <div><h2 class="t2 rv">Questions</h2><p class="sm rv kf-sub">Still need help? Talk to an expert.</p>${btn(L('contact/'), 'Contact us', 'rv')}</div>
+  <div><h2 class="t2 rv">Questions</h2><p class="sm rv kf-sub">Still need help? Talk to an expert.</p>${btn(L(CTA.discuss), 'Contact us', 'rv')}</div>
   ${faqList(FAQ)}
 </div>`);
 
@@ -238,15 +238,59 @@ const post = (L, b) => hero(L, {
     <div class="cap art-meta rv"><span>${esc(b.date)}</span> · <span>By ${esc(b.author)}</span></div>
     <img class="art-img rv" src="/media/${b.img}" alt="" loading="lazy">
     ${b.body.map(([t, x]) => (t === 'h3' ? `<h2 class="t3 rv">${esc(x)}</h2>` : `<p class="tx rv">${esc(x)}</p>`)).join('')}
-    <div class="btn-row rv">${btn(L('contact/'), 'Discuss your project')}${btn(L('blogs/'), 'All news')}</div>
+    <div class="btn-row rv">${btn(L(CTA.discuss), 'Discuss your project')}${btn(L('blogs/'), 'All news')}</div>
   </article>`);
+
+// This static site has no server, so a form hands its message to the visitor's email app. Not everyone has one
+// set up, so the panel always offers another way to send it.
+const sentPanel = () => `<div class="sent wide" hidden tabindex="-1">
+    <h3 class="t4">Almost there: your message is ready</h3>
+    <p class="sm">Your email app should have opened with everything filled in. Press send there and it reaches our team.</p>
+    <p class="sm">If it didn’t open, use one of these:</p>
+    <div class="btn-row">
+      <a class="btn roll" data-gmail href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=${CONTACT.email}" target="_blank" rel="noopener">${roll('Send with Gmail')}<b>↗</b></a>
+      <button class="btn roll" type="button" data-copy-message>${roll('Copy message')}<b>⧉</b></button>
+    </div>
+    <p class="sm">Or reach us directly: <a class="ulink" href="mailto:${CONTACT.email}">${CONTACT.email}</a> · <a class="ulink" href="tel:${CONTACT.tel}">${CONTACT.phone}</a></p>
+  </div>`;
+
+const field = (label, control, cls = '') => `<label class="fld ${cls}"><span class="fld-l">${label}</span>${control}</label>`;
+
+const bookCall = L => hero(L, {
+  kick: 'Free call', title: 'Book a free call',
+  sub: 'Talk to our team about your project. Call us now, or tell us when suits you and we will call you.',
+  trail: [['Home', ''], ['Contact', 'contact/'], ['Book a free call']],
+  extra: `<div class="btn-row ph-cta rv"><a class="btn roll" href="tel:${CONTACT.tel}">${roll(`Call ${CONTACT.phone}`)}<b>→</b></a>${btn(L(CTA.call), 'Request a call')}</div>`,
+}) + sec('dark', `<div class="bk" id="request">
+  <div class="bk-side">
+    <div class="cap rv">Call us now</div>
+    <a class="t2 bk-tel rv" href="tel:${CONTACT.tel}">${CONTACT.phone}</a>
+    <p class="sm rv">${esc(CONTACT.hours)}<br>${esc(CONTACT.city)}</p>
+    <button class="btn roll rv" type="button" data-copy="${CONTACT.phone}">${roll('Copy number')}<b>⧉</b></button>
+  </div>
+  <form class="cform bk-form rv" id="bkform" data-mail data-subject="Free call request" novalidate>
+    <h2 class="t3 wide">Or tell us when to call you</h2>
+    ${field('Name', '<input name="name" type="text" placeholder="Enter Name" autocomplete="name" required>')}
+    ${field('Phone', '<input name="phone" type="tel" placeholder="Enter Phone" autocomplete="tel" required pattern="[0-9+\\(\\)\\s\\-]{7,}" title="Please enter a phone number we can call">')}
+    ${field('Email (optional)', '<input name="email" type="email" placeholder="Enter Email" autocomplete="email">')}
+    ${field('What is it about?', `<select name="topic"><option value="">Select a service</option>${SERVICES.map(s => `<option>${esc(s.title)}</option>`).join('')}<option>Something else</option></select>`)}
+    ${field('Preferred day', '<input name="day" type="date">')}
+    ${field('Preferred time', '<select name="time"><option value="">Any time</option><option>Morning (8:00 – 12:00)</option><option>Afternoon (12:00 – 4:00)</option><option>Evening (4:00 – 6:30)</option></select>')}
+    ${field('Anything we should know? (optional)', '<textarea name="message" rows="3" placeholder="Enter Message"></textarea>', 'wide')}
+    <div class="cform-foot wide"><button class="btn roll bk-go" type="submit">${roll('Request my call')}<b>→</b></button></div>
+    ${sentPanel()}
+  </form>
+</div>`) + sec('light', `<div class="split">
+  <div><h2 class="t2 rv">Questions</h2><p class="sm rv kf-sub">Common things people ask before a first call.</p>${btn(L('faq/'), 'All questions', 'rv')}</div>
+  ${faqList([FAQ[1], FAQ[4], FAQ[5]], 'bfaq')}
+</div>`);
 
 const contact = L => hero(L, {
   kick: 'Need any help?', title: 'Get in touch with us',
   sub: 'Tell us about your project. Our team will be happy to help.',
   trail: [['Home', ''], ['Contact']],
-}) + sec('dark', `<div class="center"><div class="cap rv">Send us email</div><h2 class="t2 rv cf-t">Feel free to write</h2></div>
-<form class="cform rv" id="cform" novalidate>
+}) + sec('dark', `<div class="center" id="discuss"><div class="cap rv">Send us email</div><h2 class="t2 rv cf-t">Feel free to write</h2></div>
+<form class="cform rv" id="cform" data-mail data-subject="Website enquiry" novalidate>
   <label class="fld"><span class="vh">Name</span><input name="name" type="text" placeholder="Enter Name" autocomplete="name" required></label>
   <label class="fld"><span class="vh">Email</span><input name="email" type="email" placeholder="Enter Email" autocomplete="email" required></label>
   <label class="fld"><span class="vh">Subject</span><input name="subject" type="text" placeholder="Enter Subject"></label>
@@ -256,10 +300,10 @@ const contact = L => hero(L, {
     <button class="btn roll" type="submit">${roll('Send message')}<b>→</b></button>
     <button class="btn roll" type="reset">${roll('Reset')}<b>×</b></button>
   </div>
-  <p class="sm cform-note wide" id="cformNote" role="status" aria-live="polite"></p>
+  ${sentPanel()}
 </form>
 <div class="cf-or cap rv">or</div>
-<a class="cf-call rv" href="tel:${CONTACT.tel}"><span class="btnm">${roll('Book a free call')}</span></a>
+<a class="cf-call rv" href="${L(CTA.call)}"><span class="btnm">${roll('Book a free call')}</span></a>
 <p class="sm center cf-mail rv">Prefer email? <a class="ulink" href="mailto:${CONTACT.email}">${CONTACT.email}</a></p>`) + sec('light', `<div class="ct-grid">
   <div class="rv"><h2 class="t2">Location</h2><p class="sm">${esc(BRAND)}<br>${esc(CONTACT.city)}<br>${esc(CONTACT.hours)}</p></div>
   <div class="ct-cols">
@@ -292,6 +336,7 @@ export const routes = {
   'testimonials/': { title: 'Testimonials', active: 'testimonials/', id: 'testimonials', desc: 'What our clients say about working with SMARTINDIA.DIGITAL.', body: testimonials },
   'faq/': { title: 'FAQ', active: 'faq/', id: 'faq', desc: 'Answers to common questions about our services, process, pricing and support.', body: faq },
   'blogs/': { title: 'News', active: 'blogs/', id: 'blogs', desc: 'Thoughts from our team on building mobile and web applications.', body: blogs },
+  'book-a-call/': { title: 'Book a Free Call', active: 'contact/', id: 'book', desc: `Book a free call with SMARTINDIA.DIGITAL. Call ${CONTACT.phone} or tell us when suits you and we will call you.`, body: bookCall },
   'contact/': { title: 'Contact Us', active: 'contact/', id: 'contact', desc: `Contact SMARTINDIA.DIGITAL in Tirupur. Call ${CONTACT.phone} or email ${CONTACT.email}.`, body: contact },
 };
 SERVICES.forEach((s, i) => {

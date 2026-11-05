@@ -4,15 +4,15 @@
 // page, the horizontal work track) the map is the inverse of the measured motion curve, so content tracks the
 // wheel 1:1; set pieces (slats, the stone, carving, the ribbon) get a fixed scroll length each.
 // Real time drives the loader, the hero intro and idle loop, the fire, the storm and the trigger animations.
-import { Matrix4, Vector3, Quaternion, Euler } from 'three';
-import { clamp, lerp, seg, eio, eout, bump, kf, curve, rnd, reseed } from './lib/util.js';
+import { clamp, lerp, seg, eio, eout, bump, curve, reseed } from './lib/util.js';
 import { HERO, ABOUT, MARQUEE, FACTS, CLIENTS, SERVICES_WORDS, RIBBON } from './content.js';
-import { view, resize as glResize, renderer, camera, renderLayers, clear, PX, ref, canvas } from './gl/core.js';
+import { view, resize as glResize, renderer, camera, renderLayers, clear, canvas } from './gl/core.js';
 import { GlassText } from './gl/glass.js';
 import { makeLogo } from './gl/logo.js';
-import { makeServices, lightning } from './gl/services.js';
+import { makeServices, makeWordFx, lightning } from './gl/services.js';
 import { $, $$, S, show, letters, letterIn, odometer, setMask, blinds, Clock, initRoll, words } from './ui.js';
 import { factCardsHTML, workTrackHTML, labsHTML, ribbonCard, mountTestimonials } from './blocks.js';
+import { makeDim } from './dim.js';
 
 /* ---------- timelines (design px / seconds, measured from the reference) ---------- */
 const HOLD = 18.85, END = 76;
@@ -25,7 +25,6 @@ const WORK_X = curve([[40.4, 0], [40.8, -60], [41.0, -169], [41.2, -269], [41.6,
 // gently damped spring (≈2–3% overshoot, no bounce), normalised so spring(1) === 1
 const spring = p => (1 - Math.exp(-5.5 * p) * Math.cos(5 * p)) / (1 - Math.exp(-5.5) * Math.cos(5));
 const RIB_GRID = [[-385, -143], [1, -143], [386, -143], [-385, 138], [1, 136], [448, 176]];
-const D2R = Math.PI / 180, RING_R = 1500;
 
 const nextFrame = () => new Promise(r => requestAnimationFrame(r));
 
@@ -73,11 +72,11 @@ export async function start({ lenis, chrome, clock, loader, seen, takeOver }) {
 
   /* ---------- DOM: testimonials, design in motion ---------- */
   mountTestimonials($('#trFr'), true);
-  const dimAL = letters(el.dimA, 'Design in'), dimBL = letters(el.dimB, 'motion');
   const ribEls = RIBBON.map(r => $('#ribIn').appendChild(ribbonCard(r)));
+  const dimScene = makeDim({ dim: el.dim, dimA: el.dimA, dimB: el.dimB, dimS: el.dimS, dimLine: el.dimLine, dimArc: el.dimArc, cards: ribEls, grid: RIB_GRID });
   initRoll();
   const inEls = $$('[data-in]').map(e => ({ e, a: +e.dataset.in, clock: new Clock(.8) }));
-  const kfClock = new Clock(2), wkClock = new Clock(2), dimClock = new Clock(1.2);
+  const kfClock = new Clock(2), wkClock = new Clock(2);
 
   /* ---------- layout + scroll map ---------- */
   let MAP = [], TOTAL = 0, mqRep = 2000, limit = 1;
@@ -142,20 +141,8 @@ export async function start({ lenis, chrome, clock, loader, seen, takeOver }) {
   const glassWords = new GlassText(svSpans, { family: 'Familjen Grotesk', refr: .026, frost: 9, ghost: .6, body: .36 });
   measure();
 
-  // letters fly apart when the stone hits the words (away from the impact point); a few loom past the camera
-  reseed(404);
-  const fly = svSpans.map(() => { const big = rnd() < .16; return { a: rnd() * 6.283, sp: .6 + rnd() * .9, big, vz: big ? 9 + rnd() * 1.8 : rnd() * 3 - .5, rx: (rnd() - .5) * (big ? 1.6 : 7), ry: (rnd() - .5) * (big ? 1.6 : 7), rz: (rnd() - .5) * 3, d: rnd() * .35 }; });
   let curVt = HOLD;
-  const wordFx = (i, L) => {
-    const f = fly[i], s = seg(curVt, 58.45 + f.d * .5, 61.6 + f.d);
-    if (s <= 0) return null;
-    const p = 1 - Math.pow(1 - s, 1.7), [ix, iy] = ref(906, 321);
-    let dx = L.base.cx - ix, dy = L.base.cy - iy;
-    const l = Math.hypot(dx, dy) || 1; dx = dx / l * .75 + Math.cos(f.a) * .25; dy = dy / l * .75 + Math.sin(f.a) * .25;
-    const dist = (380 + 700 * f.sp) * view.u * p / PX(0);
-    if (f.big) return { dx: dx * dist * .3, dy: -1.0 * p, dz: f.vz * p, rx: f.rx * p, ry: f.ry * p, rz: f.rz * p, op: (1 - seg(curVt, 60.9 + f.d, 61.5 + f.d)) * .85 };
-    return { dx: dx * dist, dy: -dy * dist - p * p * .6, dz: f.vz * p, rx: f.rx * p, ry: f.ry * p, rz: f.rz * p, op: 1 - seg(curVt, 60.6 + f.d, 61.6 + f.d) };
-  };
+  const wordFx = makeWordFx(svSpans, () => curVt);
 
   // compile shaders and upload textures behind the loader so the first scroll never stutters
   await Promise.all([logo.scene, ...svc.scenes, glassMq.scene, glassWords.scene].map(s => renderer.compileAsync(s, camera).catch(() => {})));
@@ -164,10 +151,6 @@ export async function start({ lenis, chrome, clock, loader, seen, takeOver }) {
   await nextFrame();
   glassWords.layout(view.u); glassWords.update(0, {}); svc.render(56, 0, { on: 1, flash: .5, overlays: [glassWords.scene] });
   clear();
-
-  /* ---------- ribbon scratch objects ---------- */
-  const _ring = new Matrix4(), _card = new Matrix4(), _tr = new Matrix4(), _sc = new Matrix4(), _cp = new Vector3(), _cq = new Quaternion(), _ce = new Euler(),
-    _p = new Vector3(), _q = new Quaternion(), _s = new Vector3(), _gp = new Vector3(), _id = new Quaternion(), _one = new Vector3(1, 1, 1);
 
   /* ---------- per-frame render: a function of vt (scroll), T (real seconds since start) ---------- */
   let glOn = true, lightNav = null;
@@ -178,9 +161,10 @@ export async function start({ lenis, chrome, clock, loader, seen, takeOver }) {
     const showDark = !B1.done && !past, showLight = B1.any && vt < 49.4 && !past, showSvc = vt > 47.9 && !B2.done && !past,
       showTrans = B2.any && vt < 68.1 && !past, showDim = vt > 67.95 && !past;
     show(el.dark, showDark);
-    show(el.light, showLight); setMask(el.light, B1.done ? 'none' : B1.mask);
+    // a masked layer still catches clicks in its see-through slats, so it only takes them once fully in
+    show(el.light, showLight); setMask(el.light, B1.done ? 'none' : B1.mask); S(el.light, 'pointerEvents', B1.done ? 'auto' : 'none');
     show(el.svc, showSvc); show(el.svText, showSvc);
-    show(el.trans, showTrans); setMask(el.trans, B2.done ? 'none' : B2.mask);
+    show(el.trans, showTrans); setMask(el.trans, B2.done ? 'none' : B2.mask); S(el.trans, 'pointerEvents', B2.done ? 'auto' : 'none');
     show(el.dim, showDim);
 
     // reveal-on-enter: hero items follow the intro clock; the rest trigger on scroll and play in real time
@@ -256,37 +240,7 @@ export async function start({ lenis, chrome, clock, loader, seen, takeOver }) {
     if (showTrans) S(el.trPage, 'transform', `translate3d(0,${(-940 * seg(vt, 67.89, 67.95) * u).toFixed(2)}px,0)`);
 
     /* design in motion */
-    if (showDim) {
-      const uu = vt - 68.1;
-      S(el.dim, 'opacity', seg(vt, 67.95, 68.1).toFixed(3));
-      const lt = dimClock.step(vt >= 67.96, dt);
-      letterIn(dimAL, lt, .05, .35, .4); letterIn(dimBL, lt, .1, .35, .4);
-      S(el.dimA, 'left', `${kf(vt, [[67.95, 60], [68.4, 168], [69.0, 466], [72, 1365], [74, 1965]], x => x).toFixed(1)}px`);
-      S(el.dimB, 'left', `${kf(vt, [[67.95, 1290], [68.4, 1200], [69.0, 912], [72, 45], [74, -535]], x => x).toFixed(1)}px`);
-      const tx = (1 - seg(vt, 73, 74.2)).toFixed(3);
-      S(el.dimA, 'opacity', tx); S(el.dimB, 'opacity', tx); S(el.dimS, 'opacity', tx);
-      S(el.dimLine, 'opacity', seg(vt, 74.4, 75.2).toFixed(3));
-      el.dimArc.setAttribute('d', `M ${(200 + uu * 20).toFixed(1)} 80 C 700 ${(-20 + uu * 8).toFixed(1)}, 1400 200, ${(1800 - uu * 30).toFixed(1)} ${(120 + uu * 6).toFixed(1)}`);
-      const RK = [68.1, 68.4, 69.0, 69.5, 70.5, 72.0, 73.3], rk = v => kf(vt, RK.map((k, i) => [k, v[i]]));
-      const RX = rk([-20, -20, -20, -20, -16, -26, -40]), RZ = rk([-28, -28, -26, -24, -10, -30, -30]);
-      _cp.set(rk([-400, -350, -220, -100, -50, 0, -120]), rk([260, 230, 170, 120, -470, -720, -1430]), rk([-3400, -3200, -2900, -2700, -1500, -1000, -3300]));
-      _ring.compose(_cp, _cq.setFromEuler(_ce.set(RX * D2R, 0, RZ * D2R)), _one);
-      const headA = (-35 + seg(vt, 68.15, 69.4) * 125) * D2R, spin = uu * 1.1 + T * .035;   // keeps turning slowly while idle
-      ribEls.forEach((e, i) => {
-        let a = i / ribEls.length * Math.PI * 2 + spin; a = Math.atan2(Math.sin(a), Math.cos(a));
-        const rev = vt > 69.4 ? 1 : clamp((headA - a) / .35);
-        _card.makeRotationY(a).multiply(_tr.makeTranslation(0, 70 * Math.sin(a * 2 + uu * .9), RING_R)).premultiply(_ring);
-        if (rev < 1) _card.multiply(_sc.makeScale(.6 + .4 * rev, .6 + .4 * rev, 1));
-        let op;
-        if (i < RIB_GRID.length) {
-          const st = eio(seg(vt, 73.4 + i * .12, 74.6 + i * .12));
-          _card.decompose(_p, _q, _s); _p.lerp(_gp.set(RIB_GRID[i][0], RIB_GRID[i][1], 0), st); _q.slerp(_id, st); _s.lerp(_one, st); _card.compose(_p, _q, _s);
-          op = Math.max(rev, st);
-        } else op = (1 - seg(vt, 73.4, 74.4)) * rev;
-        S(e, 'visibility', op > 0 ? 'visible' : 'hidden'); S(e, 'opacity', op.toFixed(3));
-        if (op > 0) S(e, 'transform', `matrix3d(${_card.elements.map(v => v.toFixed(4)).join(',')})`);
-      });
-    }
+    if (showDim) dimScene.update(vt, T, dt);
 
     /* header: dark text over light sections; the 3D S leaves the header mark during the intro */
     const footTop = TOTAL + H - y, slat = H / 5 * .75;

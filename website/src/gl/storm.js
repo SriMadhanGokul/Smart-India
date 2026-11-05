@@ -21,8 +21,8 @@ export function flashAt(t) {
   return f;
 }
 
-function cloudTexture(sd) {
-  const S = 384, c = document.createElement('canvas'); c.width = c.height = S;
+function cloudTexture(sd, S) {
+  const c = document.createElement('canvas'); c.width = c.height = S;
   const g = c.getContext('2d'), im = g.createImageData(S, S);
   for (let y = 0; y < S; y++) for (let x = 0; x < S; x++) {
     const u = x / S, v = y / S, r = Math.hypot(u - .5, v - .5) * 2;
@@ -73,25 +73,25 @@ function boltGeometry(x0, y0, len, sd) {
   return { core: ribbon(1), glow: ribbon(9), tips };
 }
 
-export function makeStorm(backScene, frontScene) {
+export function makeStorm(backScene, frontScene, { tex = 384, nBack = 24, nFront = 8, spread = 1 } = {}) {
   reseed(301);
-  const tex = [cloudTexture(1.3), cloudTexture(4.7), cloudTexture(9.1)];
+  const texs = [cloudTexture(1.3, tex), cloudTexture(4.7, tex), cloudTexture(9.1, tex)];
   const mkCloud = (scene, z, s, op, i) => {
-    const m = new THREE.SpriteMaterial({ map: tex[i % 3], transparent: true, depthWrite: false, opacity: op });
+    const m = new THREE.SpriteMaterial({ map: texs[i % 3], transparent: true, depthWrite: false, opacity: op });
     const sp = new THREE.Sprite(m);
-    sp.userData = { x: (rnd() - .5) * 34, y: (rnd() - .5) * 15, z, s, op, vx: (rnd() - .35) * .55, rot: rnd() * 6.28, vr: (rnd() - .5) * .05, ph: rnd() * 6.28 };
+    sp.userData = { x: (rnd() - .5) * 34 * spread, y: (rnd() - .5) * 15, z, s, op, vx: (rnd() - .35) * .55, rot: rnd() * 6.28, vr: (rnd() - .5) * .05, ph: rnd() * 6.28 };
     scene.add(sp);
     return sp;
   };
   const back = [], front = [];
-  for (let i = 0; i < 24; i++) back.push(mkCloud(backScene, -16 + rnd() * 9, 9 + rnd() * 10, .38 + rnd() * .4, i));
-  for (let i = 0; i < 8; i++) front.push(mkCloud(frontScene, 7 + rnd() * 3.5, 4.5 + rnd() * 5, .14 + rnd() * .2, i + 1));
+  for (let i = 0; i < nBack; i++) back.push(mkCloud(backScene, -16 + rnd() * 9, 9 + rnd() * 10, .38 + rnd() * .4, i));
+  for (let i = 0; i < nFront; i++) front.push(mkCloud(frontScene, 7 + rnd() * 3.5, 4.5 + rnd() * 5, .14 + rnd() * .2, i + 1));
 
   // bolts tied to the strongest strikes
   const bolts = [];
   FLASHES.forEach(([t0, d, s], k) => {
     if (s < .85) return;
-    const side = k % 2 ? 1 : -1, x0 = side * (7 + rnd() * 6), y0 = 5.5 + rnd() * 2;
+    const side = k % 2 ? 1 : -1, x0 = side * (7 + rnd() * 6) * spread, y0 = 5.5 + rnd() * 2;
     const { core, glow, tips } = boltGeometry(x0, y0, 7 + rnd() * 5, 500 + k * 17);
     const cm = new THREE.MeshBasicMaterial({ color: 0xe8f0ff, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false });
     const gm = new THREE.MeshBasicMaterial({ color: 0x7f9cff, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, opacity: .12, toneMapped: false });
@@ -110,7 +110,7 @@ export function makeStorm(backScene, frontScene) {
       const cl = .12 + .08 * darkness + flash * 1.25;
       const upd = (sp, extra) => {
         const u = sp.userData, dt = drift - 50;
-        let x = u.x + u.vx * dt; x = ((x + 19) % 38 + 38) % 38 - 19;
+        const wrap = 38 * spread; let x = u.x + u.vx * dt; x = ((x + wrap / 2) % wrap + wrap) % wrap - wrap / 2;
         const s = u.s * (1 + .06 * Math.sin(drift * .4 + u.ph));
         sp.position.set(x, u.y + Math.sin(drift * .23 + u.ph) * .3, u.z);
         sp.scale.set(s, s * .72, 1);

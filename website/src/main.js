@@ -10,9 +10,9 @@ scrollTo(0, 0);
 
 const root = document.documentElement;
 // The head script chose a layout from the window size; a browser can still refuse a WebGL context.
-const webgl = (() => { try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch { return false; } })();
-if (!webgl && root.classList.contains('full')) root.classList.replace('full', 'lite');
-const lite = root.classList.contains('lite');
+const webgl = (() => { try { return !!document.createElement('canvas').getContext('webgl2'); } catch { return false; } })();
+if (!webgl) { root.classList.remove('gl'); root.classList.replace('full', 'lite'); }
+const lite = root.classList.contains('lite'), gl = root.classList.contains('gl');
 const reduce = matchMedia('(prefers-reduced-motion: reduce)');
 
 // The intro plays once per visit: coming back to the homepage goes straight to the hero.
@@ -38,7 +38,7 @@ await Promise.race([
 ]);
 
 // Let the loader get moving before the heavy 3D setup starts; it holds before its reveal until the page is ready.
-if (!seen && !reduce.matches && !lite) await new Promise(r => { const wait = () => (clock.T > 1.1 ? r() : requestAnimationFrame(wait)); wait(); });
+if (!seen && gl) await new Promise(r => { const wait = () => (clock.T > 1.1 ? r() : requestAnimationFrame(wait)); wait(); });
 const page = lite ? await import('./lite.js') : await import('./desktop.js');
 await page.start({ lenis, chrome, clock, loader, seen, reduce: reduce.matches, takeOver() { handedOver = true; } });
 

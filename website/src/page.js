@@ -8,9 +8,9 @@ import { markArt } from './mark.js';
 import { $, $$, S } from './ui.js';
 
 const root = document.documentElement;
-const webgl = (() => { try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch { return false; } })();
-if (!webgl && root.classList.contains('full')) root.classList.replace('full', 'lite');
-const lite = root.classList.contains('lite');
+const webgl = (() => { try { return !!document.createElement('canvas').getContext('webgl2'); } catch { return false; } })();
+if (!webgl) { root.classList.remove('gl'); root.classList.replace('full', 'lite'); }
+const lite = root.classList.contains('lite'), gl = root.classList.contains('gl');
 try { sessionStorage.setItem('si-seen', '1'); } catch { /* private mode */ }
 
 const lenis = new Lenis({ lerp: .1, smoothWheel: true, syncTouch: false });
@@ -35,7 +35,7 @@ if (title) {
   });
   title.classList.add('lsplit');
 }
-for (const art of $$('.ph-art')) if (lite) art.innerHTML = markArt();
+for (const art of $$('.ph-art')) if (!gl) art.innerHTML = markArt();
 
 /* ---------- reveals ---------- */
 const countUp = el => {
@@ -65,22 +65,54 @@ for (const d of $$('details[name]')) {
   });
 }
 
-/* ---------- contact form: no server behind this static site yet, so it opens the visitor's email app ---------- */
-const form = $('#cform');
-if (form) {
-  const note = $('#cformNote');
+/* ---------- forms: this static site has no server yet, so they hand the message to the visitor's email app ---------- */
+const flash = (btn, text) => {
+  const labels = $$('[data-t] > i', btn), was = labels[0]?.textContent;
+  labels.forEach(i => { i.textContent = text; });
+  setTimeout(() => labels.forEach(i => { i.textContent = was; }), 1800);
+};
+async function copy(text, btn) {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch {
+    const t = document.createElement('textarea');
+    t.value = text; t.style.position = 'fixed'; t.style.opacity = '0';
+    document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove();
+  }
+  flash(btn, 'Copied');
+}
+for (const b of $$('[data-copy]')) b.addEventListener('click', () => copy(b.dataset.copy, b));
+
+// day picker: no past dates, and the studio is closed on Sundays (Mon – Sat hours)
+for (const day of $$('input[type=date]')) {
+  const now = new Date();
+  day.min = new Date(now - now.getTimezoneOffset() * 6e4).toISOString().slice(0, 10);
+  const check = () => day.setCustomValidity(day.value && new Date(`${day.value}T12:00`).getDay() === 0 ? 'We are closed on Sundays. Please choose Monday to Saturday.' : '');
+  day.addEventListener('input', check);
+  check();
+}
+
+for (const form of $$('form[data-mail]')) {
+  const panel = $('.sent', form);
+  let message = '';
+  const label = el => el.closest('label')?.querySelector('span')?.textContent.replace(/\s*\(optional\)$/, '') || el.name;
   form.addEventListener('submit', e => {
     e.preventDefault();
-    note.textContent = '';
+    panel.hidden = true;
     if (!form.reportValidity()) return;
-    const d = new FormData(form);
-    const lines = [`Name: ${d.get('name')}`, `Email: ${d.get('email')}`];
-    if (d.get('phone')) lines.push(`Phone: ${d.get('phone')}`);
-    const body = [...lines, '', d.get('message')].join('\n');
-    location.href = `mailto:${CONTACT.email}?subject=${encodeURIComponent(d.get('subject') || 'Website enquiry')}&body=${encodeURIComponent(body)}`;
-    note.textContent = `Your email app should now open with this message ready to send. If it doesn’t, write to us at ${CONTACT.email}.`;
+    const fields = [...form.elements].filter(el => el.name && el.value.trim());
+    const subject = form.elements.subject?.value.trim() || form.dataset.subject;
+    const rows = fields.filter(el => !['message', 'subject'].includes(el.name)).map(el => `${label(el)}: ${el.value.trim()}`);
+    const note = form.elements.message?.value.trim();
+    message = [...rows, ...(note ? ['', note] : [])].join('\n');
+    const q = `subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
+    $('[data-gmail]', panel).href = `https://mail.google.com/mail/?view=cm&fs=1&to=${CONTACT.email}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
+    panel.hidden = false;
+    lenis.scrollTo(panel, { offset: -Math.round(innerHeight * .35) });
+    location.href = `mailto:${CONTACT.email}?${q}`;
   });
-  form.addEventListener('reset', () => { note.textContent = ''; });
+  form.addEventListener('reset', () => { panel.hidden = true; });
+  $('[data-copy-message]', panel).addEventListener('click', e => copy(message, e.currentTarget));
 }
 
 /* ---------- custom scrollbar (full layout) ---------- */
@@ -95,7 +127,7 @@ if (!lite) {
 }
 
 /* ---------- per-frame: slat wipes, header colour, scrollbar, 3D hero ---------- */
-const wipes = lite ? [] : $$('.wipeb').map(el => ({ el, slats: $$('.slt i', el), from: el.dataset.from, to: el.dataset.to }));
+const wipes = !gl ? [] : $$('.wipeb').map(el => ({ el, slats: $$('.slt i', el), from: el.dataset.from, to: el.dataset.to }));
 const themed = [...$$('.pg > [data-theme]'), $('#footer')];
 const hero = $('.ph');
 let hero3d = null, navLight = null;
@@ -130,7 +162,15 @@ requestAnimationFrame(frame);
 await Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 900))]);
 chrome.reveal();
 startReveals();
-if (!lite && hero) hero3d = await (await import('./hero3d.js')).startHero3D();
+if (gl && hero) {
+  try {
+    hero3d = await (await import('./hero3d.js')).startHero3D();
+  } catch (err) {    // the browser refused WebGL after all: show the flat mark instead
+    console.error(err);
+    root.classList.remove('gl');
+    for (const art of $$('.ph-art')) art.innerHTML = markArt();
+  }
+}
 
 let rt = 0;
 addEventListener('resize', () => {

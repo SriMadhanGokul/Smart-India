@@ -2,7 +2,7 @@
 // and lightning. The stone, burst and carving are scrubbed by scroll ("video time" vt); clouds and lightning
 // run on real time so the storm stays alive while the visitor pauses.
 import * as THREE from 'three';
-import { backdrop, toWorld, renderLayers, ref } from './core.js';
+import { backdrop, PX, renderLayers, ref, toWorld, view } from './core.js';
 import { seg, eio, curve, rnd, reseed } from '../lib/util.js';
 import { makeStone } from './stone.js';
 import { makeStorm, flashAt } from './storm.js';
@@ -21,6 +21,22 @@ export const LIGHTNING_PERIOD = 16;
 export const stormTime = tReal => 51 + (tReal % LIGHTNING_PERIOD);   // loop the measured strike pattern
 export const lightning = tReal => flashAt(stormTime(tReal));
 
+// Letters fly apart when the stone hits the words (away from the impact point); a few loom past the camera.
+export function makeWordFx(spans, getVt) {
+  reseed(404);
+  const fly = spans.map(() => { const big = rnd() < .16; return { a: rnd() * 6.283, sp: .6 + rnd() * .9, big, vz: big ? 9 + rnd() * 1.8 : rnd() * 3 - .5, rx: (rnd() - .5) * (big ? 1.6 : 7), ry: (rnd() - .5) * (big ? 1.6 : 7), rz: (rnd() - .5) * 3, d: rnd() * .35 }; });
+  return (i, L) => {
+    const vt = getVt(), f = fly[i], s = seg(vt, 58.45 + f.d * .5, 61.6 + f.d);
+    if (s <= 0) return null;
+    const p = 1 - Math.pow(1 - s, 1.7), [ix, iy] = ref(906, 321);
+    let dx = L.base.cx - ix, dy = L.base.cy - iy;
+    const l = Math.hypot(dx, dy) || 1; dx = dx / l * .75 + Math.cos(f.a) * .25; dy = dy / l * .75 + Math.sin(f.a) * .25;
+    const dist = (380 + 700 * f.sp) * view.u * (view.lite ? .42 : 1) * p / PX(0);
+    if (f.big) return { dx: dx * dist * .3, dy: -1.0 * p, dz: f.vz * p, rx: f.rx * p, ry: f.ry * p, rz: f.rz * p, op: (1 - seg(vt, 60.9 + f.d, 61.5 + f.d)) * .85 };
+    return { dx: dx * dist, dy: -dy * dist - p * p * .6, dz: f.vz * p, rx: f.rx * p, ry: f.ry * p, rz: f.rz * p, op: 1 - seg(vt, 60.6 + f.d, 61.6 + f.d) };
+  };
+}
+
 export function makeServices() {
   const back = new THREE.Scene(), front = new THREE.Scene();
   const bgU = { uFlash: { value: 0 } };
@@ -36,17 +52,17 @@ export function makeServices() {
   const fill = new THREE.DirectionalLight(0xffffff, .45); fill.position.set(4, -3, 8); back.add(fill);
   const flashL = new THREE.DirectionalLight(0xdfe8ff, 0); flashL.position.set(1, 9, 2); back.add(flashL);
 
-  const stone = makeStone();
+  const stone = makeStone(view.lite ? { tex: 512, seg: [84, 86, 22] } : undefined);
   back.add(stone.mesh);
 
   reseed(91);
-  const DN = 1100, dpos = new Float32Array(DN * 3), dvel = [];
+  const DN = view.lite ? 500 : 1100, dpos = new Float32Array(DN * 3), dvel = [];
   for (let i = 0; i < DN; i++) { const a = rnd() * 6.283, z = rnd() * 2 - 1, r = Math.sqrt(1 - z * z); dvel.push([r * Math.cos(a) * (1 + rnd() * 3), r * Math.sin(a) * (1 + rnd() * 3), z * (1 + rnd() * 2)]); }
   const dg = new THREE.BufferGeometry(); dg.setAttribute('position', new THREE.BufferAttribute(dpos, 3));
   const dmat = new THREE.PointsMaterial({ color: 0xcfcac2, size: .03, transparent: true, depthWrite: false });
   const dust = new THREE.Points(dg, dmat); dust.frustumCulled = false; back.add(dust);
 
-  const storm = makeStorm(back, front);
+  const storm = makeStorm(back, front, view.lite ? { tex: 256, nBack: 14, nFront: 4, spread: .42 } : undefined);
 
   return {
     scenes: [back, front],

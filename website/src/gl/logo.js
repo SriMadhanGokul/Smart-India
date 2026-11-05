@@ -63,7 +63,7 @@ const TRAVEL = {
 };
 const HERO_CYCLE = 11;   // seconds; the hero's fire/breathe choreography (8.4–19.4) loops while idle
 
-export function makeLogo() {
+export function makeLogo({ shardCount = 34 } = {}) {
   const scene = new THREE.Scene();
   scene.environment = envTex;
   scene.add(backdrop(`void main(){vec2 p=vUv;vec3 c=mix(vec3(.0042,.0048,.0085),vec3(.015,.017,.028),smoothstep(0.,1.,p.y*.55+p.x*.45));
@@ -88,7 +88,7 @@ export function makeLogo() {
   const black = new THREE.MeshPhysicalMaterial({ color: 0x0c0c0e, metalness: .9, roughness: .2, clearcoat: 1, clearcoatRoughness: .08 });
   const shardMat = black.clone(); shardMat.envMapIntensity = .35;
   const shards = [];
-  for (let i = 0; i < 34; i++) {
+  for (let i = 0; i < shardCount; i++) {
     const L = 1.2 + rnd() * 3.4, w = .05 + rnd() * .12;
     const m = new THREE.Mesh(new THREE.BoxGeometry(w, L, w * (1 + rnd() * 2)), shardMat);
     m.userData = { p: [(rnd() - .5) * 20, (rnd() - .5) * 12 - rnd() * 14, -10 + rnd() * 13], r: [rnd() * 6, rnd() * 6, rnd() * 6], s: [(rnd() - .5) * .3, (rnd() - .5) * .3, (rnd() - .5) * .3], par: .4 + rnd() * .8 };
@@ -118,20 +118,23 @@ export function makeLogo() {
   return {
     scene,
     // ti: intro clock in "video seconds" (5.3 = loader done); vt: scroll position as video time; dS: dark-page scroll px
-    // pose (inner pages): {x, y, s, lift} replaces the homepage's resting place
+    // pose replaces the homepage's desktop placement: {x, y, s} resting place, lift (scrolled away), xk (narrows the
+    // scroll journey for portrait), from {x, y, s} (the header mark the intro starts at)
     update(ti, vt, dS, pose) {
       const tc = ti < 8.4 ? ti : 8.4 + ((ti - 8.4) % HERO_CYCLE);
       scene.environmentIntensity = .07 + .23 * seg(ti, 6.6, 9.0);
+      const rx = pose?.x ?? 1010, ry = (pose?.y ?? 480) - (pose?.lift ?? 0), rs = pose?.s ?? 1.55, xk = pose?.xk ?? 1;
       // intro (leaves the header mark, flies apart in fire, assembles) → idle hover → scroll journey.
       // The states are blended, so scrolling early never makes the logo jump.
       let st;
       if (ti < 8.4) {
-        const a = eio(seg(ti, 5.45, 6.7)), b = eio(seg(ti, 6.7, 8.4)), ny = 53 - view.oy / view.u;  // header mark sits in the top-anchored nav
-        st = { x: lerp(lerp(52, 900, a), 1010, b), y: lerp(lerp(ny, 450, a), 480, b), z: -1, s: lerp(lerp(.116, 1.05, a), 1.55, b), sep: bump(ti, 5.75, 8.2, .3) * 1.5 };
-      } else st = { x: (pose?.x ?? 1010) + 30 * Math.sin(ti * .3), y: (pose?.y ?? 480) - (pose?.lift ?? 0), z: -1, s: pose?.s ?? 1.55, sep: bump(tc, 10.2, 12.8) * 1.25 + bump(tc, 15.2, 17.6) * .9 };
+        const a = eio(seg(ti, 5.45, 6.7)), b = eio(seg(ti, 6.7, 8.4));
+        const from = pose?.from ?? { x: 52, y: 53 - view.oy / view.u, s: .116 };      // header mark sits in the top-anchored nav
+        st = { x: lerp(lerp(from.x, pose?.from ? rx : 900, a), rx, b), y: lerp(lerp(from.y, 450, a), ry, b), z: -1, s: lerp(lerp(from.s, 1.05, a), rs, b), sep: bump(ti, 5.75, 8.2, .3) * 1.5 };
+      } else st = { x: rx + 30 * xk * Math.sin(ti * .3), y: ry, z: -1, s: rs, sep: bump(tc, 10.2, 12.8) * 1.25 + bump(tc, 15.2, 17.6) * .9 };
       if (vt > 18.85) {
         const w = eio(seg(vt, 18.85, 19.7));
-        for (const k in TRAVEL) st[k] = lerp(st[k], TRAVEL[k](vt), w);
+        for (const k in TRAVEL) { const v = TRAVEL[k](vt); st[k] = lerp(st[k], k === 'x' ? 960 + (v - 960) * xk : v, w); }
       }
       logo.visible = ti > 5.42;
       const [px, py] = ref(st.x, st.y), [x, y, z] = toWorld(px, py, st.z);
@@ -159,13 +162,13 @@ export function makeLogo() {
       const PXU = PX(0);
       shards.forEach(m => {
         const u = m.userData, a = seg(ti, 5.4, 7.0);
-        m.position.set(u.p[0], u.p[1] + dS / PXU * u.par, u.p[2] - (1 - a) * 10);
+        m.position.set(u.p[0] * (view.lite ? .42 : 1), u.p[1] + dS / PXU * u.par, u.p[2] - (1 - a) * 10);
         m.rotation.set(u.r[0] + ti * u.s[0], u.r[1] + ti * u.s[1], u.r[2] + ti * u.s[2]);
       });
       const so = seg(ti, 5.6, 6.6);
       streaks.forEach(m => {
         const u = m.userData, d = (ti * u.v) % 30;
-        m.position.set(u.x + Math.cos(u.a) * d, u.y + dS / PXU * .25 + Math.sin(u.a) * d, -12);
+        m.position.set(u.x * (view.lite ? .42 : 1) + Math.cos(u.a) * d, u.y + dS / PXU * .25 + Math.sin(u.a) * d, -12);
         m.rotation.z = u.a; m.scale.set(u.L, .012, 1);
         m.material.opacity = so * u.o * (.6 + .4 * Math.sin(ti * 1.3 + u.x));
       });

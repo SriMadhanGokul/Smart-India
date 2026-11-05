@@ -7,9 +7,9 @@ import { MARK, MARK_PATHS } from '../content.js';
 const SW = 2.4, SH = 2.35, SD = .95, ROUND = .07;
 const MARK_SCALE = .72;   // mark units -> stone units on the front face
 
-function stoneMaps() {
+function stoneMaps(S) {
   reseed(77);
-  const S = 1024, hgt = new Float32Array(S * S), alb = new Float32Array(S * S);
+  const hgt = new Float32Array(S * S), alb = new Float32Array(S * S);
   for (let y = 0; y < S; y++) for (let x = 0; x < S; x++) {
     const u = x / S, v = y / S, i = y * S + x;
     const g = fbm(u * 9, v * 9, 3.1, 5), p = fbm(u * 2.2 + 5, v * 2.2, 7.7, 3), f = fbm(u * 30, v * 30, 1.7, 2), gr = vnoise(u * 160, v * 160, 2.2);
@@ -18,7 +18,7 @@ function stoneMaps() {
     alb[i] = .36 + .15 * p + .11 * g + .08 * f + .06 * gr + .14 * Math.pow(clamp((edge - .72) / .28), 2);
   }
   for (let k = 0; k < 230; k++) {             // sparse pock-marks: dark bowls with lighter rims
-    const cx = rnd() * S, cy = rnd() * S, r = 1.5 + Math.pow(rnd(), 3) * 10, r2 = r * 1.5;
+    const cx = rnd() * S, cy = rnd() * S, r = (1.5 + Math.pow(rnd(), 3) * 10) * S / 1024, r2 = r * 1.5;
     for (let y = Math.max(0, Math.floor(cy - r2)); y < Math.min(S, cy + r2); y++)
       for (let x = Math.max(0, Math.floor(cx - r2)); x < Math.min(S, cx + r2); x++) {
         const d = Math.hypot(x - cx, y - cy) / r, i = y * S + x;
@@ -37,9 +37,9 @@ function stoneMaps() {
   return { albedo, bump: mk(hgt, [1, 1, 1]) };
 }
 
-export function makeStone() {
-  const { albedo, bump } = stoneMaps();
-  const geo = new THREE.BoxGeometry(SW, SH, SD, 120, 122, 44);
+export function makeStone({ tex = 1024, seg = [120, 122, 44] } = {}) {
+  const { albedo, bump } = stoneMaps(tex);
+  const geo = new THREE.BoxGeometry(SW, SH, SD, ...seg);
   const pos = geo.attributes.position, n = pos.count;
   const ix = SW / 2 - ROUND, iy = SH / 2 - ROUND, iz = SD / 2 - ROUND;
   const base = new Float32Array(n * 3), col = new Float32Array(n * 3).fill(1);

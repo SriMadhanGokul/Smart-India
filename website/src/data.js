@@ -27,6 +27,8 @@ export const CONTACT = {
   email: 'info@smartindia.ai', phone: '+91 99949 00470', tel: '+919994900470',
   city: 'Tirupur, Tamil Nadu, India', hours: 'Mon – Sat 8:00 – 6:30',
 };
+// The two main calls to action land directly on their forms.
+export const CTA = { discuss: 'contact/#discuss', call: 'book-a-call/#request' };
 export const NAV = [
   ['Home', ''], ['About', 'about/'], ['Services', 'services/'], ['Portfolio', 'projects/'], ['Team', 'team/'],
   ['Pricing', 'pricing/'], ['Testimonials', 'testimonials/'], ['FAQ', 'faq/'], ['Blogs', 'blogs/'], ['Contact', 'contact/'],

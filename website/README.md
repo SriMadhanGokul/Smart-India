@@ -44,7 +44,8 @@ rm -rf .git
 | `/projects/<project>/` | One page per project (7) |
 | `/team/`, `/pricing/`, `/testimonials/`, `/faq/` | Team, Pricing, Testimonials, FAQ |
 | `/blogs/`, `/blogs/<post>/` | News list and article |
-| `/contact/` | Contact form and details |
+| `/contact/` | Contact form and details. "Discuss your project" buttons land on its form (`#discuss`) |
+| `/book-a-call/` | Call now, or request a call. "Book a free call" buttons land on its form (`#request`) |
 | `/404.html` | Shown for any address that doesn't exist |
 
 Each page is built as real HTML, so addresses can be opened directly, refreshed and shared.
@@ -54,7 +55,8 @@ Each page is built as real HTML, so addresses can be opened directly, refreshed 
 Two layouts are chosen before the first paint (the script in `site/layout.js`).
 
 - **Full** is used on landscape screens at least 1100 px wide, with WebGL available and no reduced-motion setting.
-- **Lite** covers phones, tablets, reduced motion, and browsers without WebGL: the same content in normal page flow, with light reveal animations instead of 3D.
+- **Lite** covers phones and tablets. It tells the same 3D story in normal page flow (`src/mobile3d.js`).
+- **Lite without 3D** is the fallback for reduced motion, browsers without WebGL2, and phones that prove too slow: the same content as a plain stacked page with light reveal animations.
 
 **Homepage (full layout).** The whole story plays in one pinned viewport: loader → hero → about → glass marquee → key facts → selected work → services and the falling stone → testimonials → design in motion → footer.
 - The scroll position is mapped onto the approved video's timeline (`buildMap()` in `src/desktop.js`).
@@ -64,7 +66,14 @@ Two layouts are chosen before the first paint (the script in `site/layout.js`).
 - Every section is laid out on a 1920×868 design frame. The frame is scaled by `--u` and centred, so the composition stays the same at any desktop size. The 3D camera is matched to the same frame.
 - The loader plays once per visit. Coming back to the homepage goes straight to the hero.
 
-**Inner pages.** These use normal document flow, sized from `--px` (one design pixel at 1920 wide). They add a 3D S behind the hero (full layout only), slat wipes between sections, and a five-slat transition between pages.
+**Homepage (phones and tablets).** The page scrolls normally, and the 3D sits on one fixed canvas behind it. The sections follow the reference's phone site: the fire-lit S behind the hero and About, the S flying through a glass marquee, slats into Key facts (a swipeable row of cards), stacked work cards, then two pinned stages. The services stage runs white panel → storm → the stone through the glass words → the S carved → service cards drifting over it. The design-in-motion stage runs sliding words → the ring of cards → a 2×3 grid.
+- Scroll progress through each stage is mapped onto the same story timeline as desktop (`SVC_KEYS` in `src/mobile3d.js`), so both layouts share the same scenes and keyframes.
+- In this layout the design frame is scaled to fit a slice 560 design px wide (`LITE_W` in `src/gl/core.js`, and the script in `site/layout.js`), so the 3D stays on screen in portrait.
+- Heights use `100lvh`, the tallest viewport, so a phone's URL bar sliding away doesn't move anything. Items near the bottom of a stage allow for the bar with `100lvh - 100svh`.
+- To keep it smooth on phones, the scenes use smaller textures and fewer objects, and the 3D scene is shaded once and copied to the screen.
+- If frames stay slow, the render resolution steps down in two stages. If a phone is still too slow, or the WebGL context is lost for good, the site switches to the layout without 3D for the rest of the visit (`governor` in `src/gl/core.js`).
+
+**Inner pages.** These use normal document flow, sized from `--px` (one design pixel at 1920 wide). They add a 3D S behind the hero wherever WebGL is available, slat wipes between sections, and a five-slat transition between pages.
 
 ## Where things are
 
@@ -77,6 +86,7 @@ Two layouts are chosen before the first paint (the script in `site/layout.js`).
 | `index.html` | Homepage markup |
 | `src/content.js` | Adds site-relative URLs to the data, for browser code |
 | `src/main.js`, `src/desktop.js`, `src/lite.js` | Homepage scripts: entry, desktop scroll story, phone layout |
+| `src/mobile3d.js`, `src/dim.js` | The phone's 3D story; the design-in-motion scene, shared with desktop |
 | `src/page.js`, `src/hero3d.js` | Inner page scripts: reveals, wipes, FAQ, contact form, 3D hero |
 | `src/chrome.js` | Menu behaviour, sound, page transitions, footer, analytics |
 | `src/blocks.js` | Homepage section markup, plus the testimonial switcher |
@@ -111,7 +121,7 @@ SEO and marketing are not offered on this site, and that includes social media m
 2. In the Laravel project, run `npm install three lenis`.
 3. Create one Blade view per page, using the built HTML in `dist/` as the starting markup, with the same URLs as routes. Replace the stylesheet and script tags with `@vite([...])` pointing at `styles.css`, `pages.css`, and `main.js` (home) or `page.js` (inner pages).
 4. In Laravel's `vite.config.js`, set `build.target: 'es2022'`. The entry module uses top-level await.
-5. **Contact form:** this static site has no server, so the form opens the visitor's email app (`src/page.js`). Point it at the existing `contact/store` route.
+5. **Forms:** this static site has no server, so the contact and booking forms open the visitor's email app, with Gmail and copy-message as fallbacks (`src/page.js`). Point them at the existing `contact/store` route so messages send directly from the page.
 6. Redirect old addresses: `/services/seo`, `/services/social-media-marketing` and `/services/meta-google-ads` to `/services/`, and `/projects/details?id=…` to the matching `/projects/<project>/`.
 7. Clarity (`xxhznt5zik`) and the Meta Pixel (`1062073803017574`) load only in production builds on `smartindia.digital` (`chrome.js`). Remove the old inline snippets from the layout so visits aren't counted twice.
 

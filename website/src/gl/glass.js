@@ -128,7 +128,8 @@ export class GlassText {
     const px0 = PX(0), sh = Math.max(6, px0 * .07);
     this.letters.forEach((L, i) => {
       const o = fx ? fx(i, L) || {} : {};
-      const op = opacity * (o.op ?? 1), B = L.base;
+      const B = L.base, off = !fx && (B.cx + B.w < 0 || B.cx - B.w > view.w);
+      const op = off ? 0 : opacity * (o.op ?? 1);
       const x = (B.cx - view.w / 2) / px0 + (o.dx || 0), y = (view.h / 2 - B.cy) / px0 + (o.dy || 0), z = o.dz || 0;
       for (const [mesh, k] of [[L.glass, 0], [L.shadow, 1]]) {
         mesh.visible = op > .002;

@@ -1,6 +1,6 @@
 // Site chrome behaviour shared by every page: menu overlay, ambient sound, footer, page transitions, analytics.
 // The markup itself is rendered at build time (site/layout.js).
-import { CONTACT, MEDIA } from './content.js';
+import { MEDIA } from './content.js';
 import { $, $$, initRoll } from './ui.js';
 
 const root = document.documentElement;
@@ -11,7 +11,6 @@ function setRoll(el, text) { el.dataset.t = text; el.__roll = false; initRoll(el
 
 export function initChrome({ lenis }) {
   const nav = $('#nav'), menu = $('#menu'), menuBtn = $('#navMenu');
-  for (const a of $$('.callBtn')) a.href = `tel:${CONTACT.tel}`;
 
   /* ---------- menu ---------- */
   let open = false, introLock = false;
@@ -62,7 +61,8 @@ export function initChrome({ lenis }) {
     if (u.pathname === location.pathname) {
       e.preventDefault();
       if (open) setMenu(false);
-      lenis.scrollTo(0, { immediate: reduceMotion(), force: true });
+      const target = u.hash && document.querySelector(u.hash);
+      lenis.scrollTo(target || 0, { immediate: reduceMotion(), force: true, offset: target ? -Math.round(innerHeight * .1) : 0 });
       return;
     }
     if (reduceMotion()) return;
