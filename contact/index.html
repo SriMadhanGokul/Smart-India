@@ -19,13 +19,13 @@
 <script>(function(d,w){var r=d.documentElement;w.__wantsLite=function(){return matchMedia('(prefers-reduced-motion: reduce)').matches||!w.WebGLRenderingContext||innerWidth<1100||innerWidth/innerHeight<1.2};
 w.__frameVars=function(){var W=innerWidth,H=innerHeight,u=Math.min(W/1920,H/868),s=r.style;s.setProperty('--u',u.toFixed(5));s.setProperty('--nu',w.__wantsLite()?'.78':Math.max(u,.62).toFixed(4));s.setProperty('--ox',((W-1920*u)/2).toFixed(2)+'px');s.setProperty('--oyc',((H-868*u)/2).toFixed(2)+'px');s.setProperty('--oyb',(H-868*u).toFixed(2)+'px')};
 var c=' js '+(w.__wantsLite()?'lite':'full');try{if(sessionStorage.getItem('si-wipe'))c+=' wiped';if(sessionStorage.getItem('si-seen'))c+=' seen'}catch(e){}r.className+=c;w.__frameVars()})(document,window)</script>
-  <script type="module" crossorigin src="/Smart-India/assets/util-BXIZ9lbU.js"></script>
-  <script type="module" crossorigin src="/Smart-India/assets/ui-D6n6QDu0.js"></script>
-  <script type="module" crossorigin src="/Smart-India/assets/chrome-CKS6dMo1.js"></script>
-  <script type="module" crossorigin src="/Smart-India/assets/mark-CiBYqnwF.js"></script>
-  <script type="module" crossorigin src="/Smart-India/assets/page-DabhOUXi.js"></script>
-  <link rel="stylesheet" crossorigin href="/Smart-India/assets/chrome-BnTccPp5.css">
-  <link rel="stylesheet" crossorigin href="/Smart-India/assets/page-DfYs93S4.css">
+  <script type="module" crossorigin src="/Smart-India/assets/util-kqe-r8ua.js"></script>
+  <script type="module" crossorigin src="/Smart-India/assets/ui-LUlElLsz.js"></script>
+  <script type="module" crossorigin src="/Smart-India/assets/chrome-CLZ658Xl.js"></script>
+  <script type="module" crossorigin src="/Smart-India/assets/mark-DB-y1u2-.js"></script>
+  <script type="module" crossorigin src="/Smart-India/assets/page-_7sWYD9V.js"></script>
+  <link rel="stylesheet" crossorigin href="/Smart-India/assets/chrome-UMGXPnvR.css">
+  <link rel="stylesheet" crossorigin href="/Smart-India/assets/page-RS8oGYUn.css">
 </head>
 <body class="inner" data-page="contact">
 <canvas id="gl" aria-hidden="true"></canvas>
@@ -36,7 +36,7 @@ var c=' js '+(w.__wantsLite()?'lite':'full');try{if(sessionStorage.getItem('si-w
     <button id="navSnd" type="button" aria-label="Play ambient sound" aria-pressed="false">
       <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 5h2.5L8 2v10L4.5 9H2z" fill="currentColor"/><path class="off" d="M10 4l3 6M13 4l-3 6" stroke="currentColor" stroke-width="1.1"/><path class="on" d="M10 4.5q2 2.5 0 5M11.5 3q3.4 4 0 8" stroke="currentColor" stroke-width="1.1" fill="none"/></svg>
     </button>
-    <a id="navTalk" class="pill roll" href="/Smart-India/contact/"><span data-t="Let's talk"><i>Let's talk</i><i aria-hidden="true">Let's talk</i></span></a>
+    <a id="navTalk" class="pill roll" href="/Smart-India/contact/#discuss"><span data-t="Let's talk"><i>Let's talk</i><i aria-hidden="true">Let's talk</i></span></a>
     <button id="navMenu" class="pill roll" type="button" aria-expanded="false" aria-controls="menu"><span data-t="Menu" id="navMenuT"><i>Menu</i><i aria-hidden="true">Menu</i></span><i aria-hidden="true"></i></button>
   </div>
 </header>
@@ -68,8 +68,8 @@ var c=' js '+(w.__wantsLite()?'lite':'full');try{if(sessionStorage.getItem('si-w
     <div class="ph-hold">Scroll to <span class="ic">✸</span> explore</div>
     <nav class="crumbs" aria-label="Breadcrumb"><a href="/Smart-India/">Home</a><i aria-hidden="true">/</i><span aria-current="page">Contact</span></nav>
   </div>
-</section><section class="sec dark " data-theme="dark"><div class="center"><div class="cap rv">Send us email</div><h2 class="t2 rv cf-t">Feel free to write</h2></div>
-<form class="cform rv" id="cform" novalidate>
+</section><section class="sec dark " data-theme="dark"><div class="center" id="discuss"><div class="cap rv">Send us email</div><h2 class="t2 rv cf-t">Feel free to write</h2></div>
+<form class="cform rv" id="cform" data-mail data-subject="Website enquiry" novalidate>
   <label class="fld"><span class="vh">Name</span><input name="name" type="text" placeholder="Enter Name" autocomplete="name" required></label>
   <label class="fld"><span class="vh">Email</span><input name="email" type="email" placeholder="Enter Email" autocomplete="email" required></label>
   <label class="fld"><span class="vh">Subject</span><input name="subject" type="text" placeholder="Enter Subject"></label>
@@ -79,10 +79,19 @@ var c=' js '+(w.__wantsLite()?'lite':'full');try{if(sessionStorage.getItem('si-w
     <button class="btn roll" type="submit"><span data-t="Send message"><i>Send message</i><i aria-hidden="true">Send message</i></span><b>→</b></button>
     <button class="btn roll" type="reset"><span data-t="Reset"><i>Reset</i><i aria-hidden="true">Reset</i></span><b>×</b></button>
   </div>
-  <p class="sm cform-note wide" id="cformNote" role="status" aria-live="polite"></p>
+  <div class="sent wide" hidden tabindex="-1">
+    <h3 class="t4">Almost there: your message is ready</h3>
+    <p class="sm">Your email app should have opened with everything filled in. Press send there and it reaches our team.</p>
+    <p class="sm">If it didn’t open, use one of these:</p>
+    <div class="btn-row">
+      <a class="btn roll" data-gmail target="_blank" rel="noopener"><span data-t="Send with Gmail"><i>Send with Gmail</i><i aria-hidden="true">Send with Gmail</i></span><b>↗</b></a>
+      <button class="btn roll" type="button" data-copy-message><span data-t="Copy message"><i>Copy message</i><i aria-hidden="true">Copy message</i></span><b>⧉</b></button>
+    </div>
+    <p class="sm">Or reach us directly: <a class="ulink" href="mailto:info@smartindia.ai">info@smartindia.ai</a> · <a class="ulink" href="tel:+919994900470">+91 99949 00470</a></p>
+  </div>
 </form>
 <div class="cf-or cap rv">or</div>
-<a class="cf-call rv" href="tel:+919994900470"><span class="btnm"><span data-t="Book a free call"><i>Book a free call</i><i aria-hidden="true">Book a free call</i></span></span></a>
+<a class="cf-call rv" href="/Smart-India/book-a-call/#request"><span class="btnm"><span data-t="Book a free call"><i>Book a free call</i><i aria-hidden="true">Book a free call</i></span></span></a>
 <p class="sm center cf-mail rv">Prefer email? <a class="ulink" href="mailto:info@smartindia.ai">info@smartindia.ai</a></p></section><section class="sec light " data-theme="light"><div class="ct-grid">
   <div class="rv"><h2 class="t2">Location</h2><p class="sm">SMARTINDIA.DIGITAL<br>Tirupur, Tamil Nadu, India<br>Mon – Sat 8:00 – 6:30</p></div>
   <div class="ct-cols">
@@ -103,8 +112,8 @@ var c=' js '+(w.__wantsLite()?'lite':'full');try{if(sessionStorage.getItem('si-w
     <div class="fclock cap" id="clock" aria-label="Local time in Tirupur"></div>
     <h2 class="fHead">Ready to build something bold?</h2>
     <div class="fcta">
-      <a class="btn roll" href="/Smart-India/contact/"><span data-t="Discuss your project"><i>Discuss your project</i><i aria-hidden="true">Discuss your project</i></span><b>→</b></a>
-      <a class="btn roll" href="tel:+919994900470"><span data-t="Book a free call"><i>Book a free call</i><i aria-hidden="true">Book a free call</i></span><b>→</b></a>
+      <a class="btn roll" href="/Smart-India/contact/#discuss"><span data-t="Discuss your project"><i>Discuss your project</i><i aria-hidden="true">Discuss your project</i></span><b>→</b></a>
+      <a class="btn roll" href="/Smart-India/book-a-call/#request"><span data-t="Book a free call"><i>Book a free call</i><i aria-hidden="true">Book a free call</i></span><b>→</b></a>
     </div>
     <div class="finfo">
       <div class="cap dim">Business enquiry</div>
