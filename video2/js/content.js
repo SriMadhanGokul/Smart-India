@@ -25,7 +25,7 @@ export const HERO = {
   times: [[7.25, 10.15], [11.0, 13.4], [14.1, 16.65], [17.5, 99]],
   est: 'Est. Tirupur',
   years: '15+ years in<br>digital service.',
-  blurb: 'Websites, apps, SEO, ads and brands built for reach, growth and impact.',
+  blurb: 'Mobile and web applications and brands built for reach, growth and impact.',
   hold: 'Scroll to <span class="ic">✸</span> explore',
   dare: 'Dare <span class="ic">⚡</span> to grow your brand.',
 };
@@ -33,7 +33,7 @@ export const HERO = {
 export const ABOUT = {
   text: 'SMARTINDIA.DIGITAL is a creative digital agency crafting high-impact brand experiences through strategy, design, and technology.',
   left: 'Creativity meets strategy.<br>Design. Develop. Deliver.<br>Built to grow.',
-  mission: 'Our mission is to help startups and established brands grow, with websites, apps and campaigns that attract, engage and convert.',
+  mission: 'Our mission is to help startups and established brands grow, with mobile and web applications that attract, engage and convert.',
   focus: 'Tailored solutions.<br>Seamless execution.',
 };
 export const MARQUEE = ['DESIGN', 'DEVELOP', 'DELIVER'];
@@ -52,24 +52,22 @@ export const CLIENTS = [
   ['Capterra ★ 4.8', 'font-weight:600'],
 ];
 export const WORK = [
-  { img: 'project1-1.jpg', overlay: 'Shop smarter.', title: 'E-Commerce Growth Platform', text: 'A conversion-focused online store built to attract, engage and sell.' },
+  { img: 'project1-1.jpg', overlay: 'Shop smarter.', title: 'E-Commerce Growth Platform', text: 'A custom e-commerce web application built to attract, engage and sell.' },
   { img: 'project1-2.jpg', overlay: 'Redesigned.', title: 'Brand & Website Redesign', text: 'A refreshed identity and a fast, modern website for a growing brand.' },
-  { img: 'project1-3.jpg', overlay: 'Rank #1.', title: 'Local Business SEO Campaign', text: 'On-page, off-page and local SEO that put a local business on the map.' },
+  { img: 'project1-3.jpg', overlay: 'Mobile first.', title: 'TechSolutions Mobile App', text: 'A seamless, user-friendly mobile app that earned amazing feedback from its customers.' },
 ];
-export const SERVICES_WORDS = ['SEO', 'DESIGN', 'DEVELOPMENT', 'MARKETING'];
+export const SERVICES_WORDS = ['DESIGN', 'MOBILE & WEB', 'APPLICATION', 'DEVELOPMENT'];
 export const SERVICES = [
-  ['Social Media<br>Marketing', 'Strategic campaigns that grow engagement and brand presence on every platform.', 'rings'],
-  ['Web<br>Development', 'Custom, responsive, high-performance websites tailored to your business.', 'squares'],
-  ['App<br>Development', 'Intuitive iOS and Android apps that deliver seamless user journeys.', 'phone'],
-  ['SEO', 'On-page, off-page and local SEO strategies that lift your rankings.', 'bars'],
-  ['Meta &amp; Google<br>Ads', 'Highly targeted campaigns that maximise your return on ad spend.', 'target'],
+  ['Mobile Application<br>Development', 'Powerful and intuitive mobile applications for iOS and Android with seamless user journeys.', 'phone'],
+  ['Web Application<br>Development', 'Custom, scalable web applications built from scratch with modern technologies like Laravel and React.', 'webapp'],
+  ['Website<br>Development', 'Custom, responsive, high-performance websites tailored to your business.', 'squares'],
   ['Graphic<br>Designing', 'Logos, posters and visual identities that capture your brand’s essence.', 'spiral'],
 ];
 export const TESTIMONIAL = {
-  clients: ['GreenGrocer', 'FashionNova', 'TechSolutions'],
+  clients: ['Chen Real Estate', 'FashionNova', 'TechSolutions'],
   active: 1,
-  quote: 'SMARTINDIA.DIGITAL transformed our online presence completely. Their team is professional, responsive, and truly understands digital marketing.',
+  quote: 'SMARTINDIA.DIGITAL transformed our online presence completely. Our sales increased by 40% within the first three months of launching the new website.',
   name: 'Sarah Johnson', role: 'CEO, FashionNova', img: 'testi1-1.jpg',
 };
 export const RIBBON = ['about-1-1.jpg', 'T:2026', 'project1-1.jpg', 'video-1-1.jpg', 'object.png', 'T:SMART®', 'choose-us-1-1.jpg', 'project1-3.jpg', 'aihero.jpeg', 'T:DESIGN', 'contact-1-1.jpg', 'object3.png',
-  'project1-2.jpg', 'news-1-1.jpg', 'object2.png', 'about-1-2.jpg', 'T:SEARCH', 'service-bg-1-1.jpg', 'T:CONVERT', 'team-bg-1-1.jpg', 'T:TIRUPUR', 'choose-us-1-1.jpg', 'object2.png', 'contact-1-1.jpg'];
+  'project1-2.jpg', 'news-1-1.jpg', 'object2.png', 'about-1-2.jpg', 'T:APPS', 'service-bg-1-1.jpg', 'T:CONVERT', 'team-bg-1-1.jpg', 'T:TIRUPUR', 'choose-us-1-1.jpg', 'object2.png', 'contact-1-1.jpg'];

@@ -1,23 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SMARTINDIA.DIGITAL – Creative Digital Agency in Tirupur</title>
-<meta name="description" content="SMARTINDIA.DIGITAL is a creative digital agency in Tirupur crafting websites, apps, SEO, Meta &amp; Google ads, social media and brand design that grow your business.">
-<meta name="google-site-verification" content="Xm2TRckxXp8vL-KfetKLU4Iz2xRRGbkHqQT7nrhVl5Q">
-<meta property="og:title" content="SMARTINDIA.DIGITAL – Designed to grow your business">
-<meta property="og:description" content="Websites, apps, SEO, ads and brands built for reach, growth and impact.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://smartindia.digital/">
-<meta name="theme-color" content="#040508">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Martian+Mono:wght@400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/src/styles.css">
+<!--site:head-->
 </head>
-<body>
+<body data-page="home">
 <canvas id="gl" aria-hidden="true"></canvas>
 
 <!-- ============ LOADER ============ -->
@@ -35,32 +21,8 @@
   <div id="ldNum">000</div>
 </div>
 
-<!-- ============ HEADER ============ -->
-<header id="nav">
-  <a id="navLogo" href="/" aria-label="SMARTINDIA.DIGITAL home"></a>
-  <div id="navRight">
-    <button id="navSnd" type="button" aria-label="Play ambient sound" aria-pressed="false">
-      <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 5h2.5L8 2v10L4.5 9H2z" fill="currentColor"/><path class="off" d="M10 4l3 6M13 4l-3 6" stroke="currentColor" stroke-width="1.1"/><path class="on" d="M10 4.5q2 2.5 0 5M11.5 3q3.4 4 0 8" stroke="currentColor" stroke-width="1.1" fill="none"/></svg>
-    </button>
-    <a id="navTalk" class="pill roll" href="https://smartindia.digital/contact"><span data-t="Let's talk"></span></a>
-    <button id="navMenu" class="pill roll" type="button" aria-expanded="false" aria-controls="menu"><span data-t="Menu" id="navMenuT"></span><i aria-hidden="true"></i></button>
-  </div>
-</header>
-
-<!-- ============ MENU OVERLAY ============ -->
-<div id="menu" aria-hidden="true" role="dialog" aria-label="Site menu">
-  <div class="slats"><i></i><i></i><i></i><i></i><i></i></div>
-  <nav aria-label="Main"><ol id="menuLinks"></ol></nav>
-  <div id="menuSide">
-    <div class="cap dim">Business enquiry</div>
-    <a class="menuBig roll" id="menuMail"></a>
-    <a class="menuBig roll" id="menuTel"></a>
-    <div class="cap dim gapT">Studio</div>
-    <p class="p17" id="menuAddr"></p>
-    <div class="cap dim gapT">Social</div>
-    <div id="menuSocial"></div>
-  </div>
-</div>
+<!--site:header-->
+<!--site:menu-->
 
 <!-- ============ DESKTOP STAGE: one pinned viewport, scrubbed by scroll ============ -->
 <main id="stageWrap">
@@ -74,8 +36,8 @@
             <div class="a" id="flare"></div>
             <h1 class="a" id="head" aria-label="Designed to grow your business"><div id="hl1" aria-hidden="true"></div><div id="hl2" aria-hidden="true"><span id="hlFix"></span><span id="wordBox"></span></div></h1>
             <div class="a row" style="left:38px;top:319px;gap:23px" data-in="7.9">
-              <a class="btn roll" href="https://smartindia.digital/contact" style="width:236px"><span data-t="Discuss your project"></span><b>→</b></a>
-              <a class="btn roll callBtn" style="width:236px"><span data-t="Book a free call"></span><b>→</b></a>
+              <a class="btn roll" href="~/contact/" style="width:236px"><span data-t="Discuss your project"></span><b>→</b></a>
+              <a class="btn roll callBtn" href="tel:+919994900470" style="width:236px"><span data-t="Book a free call"></span><b>→</b></a>
             </div>
           </div>
           <div class="fr b">
@@ -95,7 +57,7 @@
           <div class="a plus" style="left:1256px;top:494px" data-in="21.8">+</div>
           <div class="a cap lh17" id="aboutLeft" style="left:192px;top:595px" data-in="22.3"></div>
           <p class="a p18" id="aboutMission" style="left:1272px;top:615px;width:375px" data-in="22.5"></p>
-          <div class="a" style="left:1272px;top:766px" data-in="22.7"><a class="btn roll" href="https://smartindia.digital/about" style="width:190px"><span data-t="More about us"></span><b>→</b></a></div>
+          <div class="a" style="left:1272px;top:766px" data-in="22.7"><a class="btn roll" href="~/about/" style="width:190px"><span data-t="More about us"></span><b>→</b></a></div>
           <div class="a cap lh17" id="aboutFocus" style="left:192px;top:1009px" data-in="25.6"></div>
           <div class="a" style="left:0;top:1205px;width:1920px;height:150px"><div class="a" id="mq" aria-label="Design. Develop. Deliver."></div></div>
         </div>
@@ -128,11 +90,11 @@
       <div class="fr c">
         <div class="a cap center" id="svcLbl" style="left:0;width:1920px;top:112px">Our services</div>
         <div class="a cap center" id="svcB1" style="left:0;width:1920px;top:766px"><span id="b1a">✦ Designed with intent. Built to grow.</span><span id="b1b">✦ Different services. One standard of craft.</span></div>
-        <a class="a btn roll" id="svcB2" href="https://smartindia.digital/services" style="left:1680px;top:758px;width:190px"><span data-t="View services"></span><b>→</b></a>
+        <a class="a btn roll" id="svcB2" href="~/services/" style="left:1680px;top:758px;width:190px"><span data-t="View services"></span><b>→</b></a>
         <div class="a" id="labs"></div>
       </div>
     </section>
-    <div class="layer" id="svText"><div class="fr c"><h2 class="a" id="svWrap" aria-label="SEO. Design. Development. Marketing."></h2></div></div>
+    <div class="layer" id="svText"><div class="fr c"><h2 class="a" id="svWrap" aria-label="Design. Mobile and web application development."></h2></div></div>
 
     <!-- testimonials -->
     <section class="layer" id="trans" aria-label="Client testimonials">
@@ -151,8 +113,8 @@
         <div class="a cap center lh17" id="dimS" style="left:851px;top:417px;width:220px">Exploring ideas through<br>daily design practice.</div>
         <div class="a" id="dimLine" style="left:50px;top:650px;width:1600px"></div>
         <div class="a" id="rib"><div id="ribIn"></div></div>
-        <p class="a p17" id="dimDesc" style="left:38px;top:753px;width:330px">Concepts, campaigns and interface designs crafted for our clients.</p>
-        <a class="a btn roll" id="dimBtn" href="https://smartindia.digital/projects" style="left:1701px;top:758px;width:182px"><span data-t="View portfolio"></span><b>→</b></a>
+        <p class="a p17" id="dimDesc" style="left:38px;top:753px;width:330px">Concepts, applications and interface designs crafted for our clients.</p>
+        <a class="a btn roll" id="dimBtn" href="~/projects/" style="left:1701px;top:758px;width:182px"><span data-t="View portfolio"></span><b>→</b></a>
       </div>
     </section>
   </div>
@@ -161,29 +123,7 @@
 <!-- ============ MOBILE / REDUCED-MOTION LAYOUT (built by lite.js) ============ -->
 <main id="lite" hidden></main>
 
-<!-- ============ FOOTER ============ -->
-<footer id="footer">
-  <canvas id="lines" aria-hidden="true"></canvas>
-  <div class="ffr">
-    <div class="fk cap" id="fKicker"></div>
-    <div class="fclock cap" id="clock" aria-label="Local time in Tirupur"></div>
-    <h2 class="fHead" id="fHead"></h2>
-    <div class="fcta">
-      <a class="btn roll" href="https://smartindia.digital/contact"><span data-t="Discuss your project"></span><b>→</b></a>
-      <a class="btn roll callBtn"><span data-t="Book a free call"></span><b>→</b></a>
-    </div>
-    <div class="finfo">
-      <div class="cap dim">Business enquiry</div>
-      <p class="p17">E. <a class="roll" id="fMail"><span></span></a></p>
-      <p class="p17">P. <a class="roll" id="fTel"><span></span></a></p>
-    </div>
-    <div class="fsoc"><div class="cap dim">Social</div><div id="fSocial"></div></div>
-    <div class="fbot"><span class="cap dim" id="fCopy"></span><span class="cap dim" id="fAddr"></span></div>
-    <svg id="wordmark" viewBox="0 0 1924 491" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="wmGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8d8d8"/><stop offset=".72" stop-color="#d8d8d8" stop-opacity=".55"/><stop offset="1" stop-color="#d8d8d8" stop-opacity=".12"/></linearGradient></defs><text x="962" y="452" text-anchor="middle" textLength="1910" lengthAdjust="spacingAndGlyphs">SMARTINDIA</text></svg>
-  </div>
-</footer>
-
-<div id="sbar" aria-hidden="true"><i id="sthumb"></i></div>
+<!--site:footer-->
 
 <script type="module" src="/src/main.js"></script>
 </body>

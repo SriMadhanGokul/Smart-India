@@ -8,6 +8,23 @@ const LD_W = curve([[4.05, 260], [4.25, 504], [4.4, 620], [4.5, 1100], [4.62, 15
 const LD_H = curve([[4.05, 260], [4.25, 348], [4.4, 390], [4.5, 600], [4.62, 760], [4.75, 868]]);
 const LD_G = curve([[4.0, 214], [4.25, 170], [4.5, 68], [4.75, 4]]);
 export const LOADER_END = 5.05;
+const HOLD_AT = 3.85;   // the fully drawn mark, just before the box opens: the loader waits here until the page is ready
+
+// Intro clock. It advances with capped steps during the loader, so a busy main thread pauses the animation
+// instead of making it jump, and it holds before the reveal until `ready` is set.
+export function makeClock(start = 0) {
+  const c = {
+    T: start, ready: start >= LOADER_END, last: performance.now(),
+    tick(now) {
+      const raw = Math.max(0, now - c.last) / 1000;
+      c.last = now;
+      c.T += Math.min(raw, c.T < LOADER_END ? .05 : .1);
+      if (!c.ready) c.T = Math.min(c.T, HOLD_AT);
+      return raw;
+    },
+  };
+  return c;
+}
 
 export function makeLoader() {
   const s = 56, o = 130, d = p => 'M' + p.map(([x, y]) => `${(o + x * s).toFixed(1)} ${(o - y * s).toFixed(1)}`).join(' L') + ' Z';

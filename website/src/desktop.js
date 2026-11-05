@@ -13,7 +13,6 @@ import { makeLogo } from './gl/logo.js';
 import { makeServices, lightning } from './gl/services.js';
 import { $, $$, S, show, letters, letterIn, odometer, setMask, blinds, Clock, initRoll, words } from './ui.js';
 import { factCardsHTML, workTrackHTML, labsHTML, ribbonCard, mountTestimonials } from './blocks.js';
-import { makeLoader } from './loader.js';
 
 /* ---------- timelines (design px / seconds, measured from the reference) ---------- */
 const HOLD = 18.85, END = 76;
@@ -28,7 +27,9 @@ const spring = p => (1 - Math.exp(-5.5 * p) * Math.cos(5 * p)) / (1 - Math.exp(-
 const RIB_GRID = [[-385, -143], [1, -143], [386, -143], [-385, 138], [1, 136], [448, 176]];
 const D2R = Math.PI / 180, RING_R = 1500;
 
-export async function startDesktop({ lenis, chrome }) {
+const nextFrame = () => new Promise(r => requestAnimationFrame(r));
+
+export async function start({ lenis, chrome, clock, loader, seen, takeOver }) {
   const root = document.documentElement;
   const el = Object.fromEntries(['dark', 'light', 'svc', 'svText', 'trans', 'dim', 'darkPage', 'lightPage', 'trPage', 'wtrack', 'mq', 'flare',
     'svWrap', 'b1a', 'b1b', 'dimA', 'dimB', 'dimS', 'dimLine', 'dimArc', 'stageWrap', 'sbar', 'sthumb'].map(id => [id, $('#' + id)]));
@@ -131,7 +132,12 @@ export async function startDesktop({ lenis, chrome }) {
   glResize(); setVars(); buildMap();
 
   /* ---------- WebGL ---------- */
-  const logo = makeLogo(), svc = makeServices();
+  // built in small steps between frames so the loader (already playing) keeps moving
+  await nextFrame();
+  const logo = makeLogo();
+  await nextFrame();
+  const svc = makeServices();
+  await nextFrame();
   const glassMq = new GlassText(mqSpans, { family: 'Familjen Grotesk', refr: .022, frost: 8, ghost: .55, body: .34 });
   const glassWords = new GlassText(svSpans, { family: 'Familjen Grotesk', refr: .026, frost: 9, ghost: .6, body: .36 });
   measure();
@@ -153,7 +159,9 @@ export async function startDesktop({ lenis, chrome }) {
 
   // compile shaders and upload textures behind the loader so the first scroll never stutters
   await Promise.all([logo.scene, ...svc.scenes, glassMq.scene, glassWords.scene].map(s => renderer.compileAsync(s, camera).catch(() => {})));
+  await nextFrame();
   glassMq.layout(view.u); glassMq.update(0, {}); logo.update(9, HOLD, 0); renderLayers(logo.scene, [glassMq.scene]);
+  await nextFrame();
   glassWords.layout(view.u); glassWords.update(0, {}); svc.render(56, 0, { on: 1, flash: .5, overlays: [glassWords.scene] });
   clear();
 
@@ -233,9 +241,9 @@ export async function startDesktop({ lenis, chrome }) {
       const sw = seg(vt, 51.6, 52.4);
       S(el.b1a, 'opacity', (1 - sw).toFixed(3)); S(el.b1a, 'filter', `blur(${(sw * 6).toFixed(2)}px)`);
       S(el.b1b, 'opacity', sw.toFixed(3)); S(el.b1b, 'filter', `blur(${((1 - sw) * 6).toFixed(2)}px)`);
-      // two lanes beside the stone: left lane rises, right lane descends
+      // two lanes beside the stone: left lane rises, right lane descends; the cards share the same stretch of scroll
       labEls.forEach((e, i) => {
-        const lane = i % 2, p = (vt - (62.4 + i * .5)) / 2.0;
+        const lane = i % 2, p = (vt - (62.4 + i * 2.5 / (labEls.length - 1))) / 2.5;
         const x = lane ? 1590 : 330, yy = lane ? lerp(150, 700, p) : lerp(700, 150, p);
         const on = p <= 0 || p >= 1 ? 0 : Math.min(eout(seg(p, 0, .16)), 1 - eout(seg(p, .84, 1))) * (1 - seg(vt, 66.0, 66.45));
         S(e, 'visibility', on > 0 ? 'visible' : 'hidden');
@@ -329,17 +337,18 @@ export async function startDesktop({ lenis, chrome }) {
   if (import.meta.env.DEV) window.__site = { lenis, yAt, vtAt, go: vt => lenis.scrollTo(yAt(vt), { immediate: true, force: true }), get vt() { return lastVt; } };
 
   /* ---------- run ---------- */
-  const loader = makeLoader();
-  chrome.lock(true);
-  let t0 = performance.now(), last = t0, locked = true;
+  takeOver();
+  clock.ready = true;
+  let locked = !seen, first = true;
   const frame = now => {
-    const T = (now - t0) / 1000, dt = Math.min(.1, Math.max(0, now - last) / 1000); last = now;
+    const dt = Math.min(.1, clock.tick(now)), T = clock.T;
     lenis.raf(now);
     if (locked && T > 6.6) { locked = false; chrome.lock(false); }
     loader.frame(T);
     const y = lenis.scroll;
     lastVt = vtAt(y);
     render(lastVt, T, dt, y);
+    if (first) { first = false; chrome.reveal(); }
     requestAnimationFrame(frame);
   };
   requestAnimationFrame(frame);

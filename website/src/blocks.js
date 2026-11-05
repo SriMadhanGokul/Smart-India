@@ -1,5 +1,5 @@
 // HTML builders shared by the desktop stage and the lite layout, plus the testimonial switcher.
-import { FACTS, WORK, SERVICES, CLIENTS, TESTIMONIALS, CONTACT, MEDIA, SITE } from './content.js';
+import { CLIENTS, FACTS, ICON, MEDIA, SERVICE_CARDS, TESTIMONIALS, WORK, href } from './content.js';
 import { $, $$, words, initRoll } from './ui.js';
 
 const star = c => `<svg width="22" height="18" viewBox="0 0 22 18" aria-hidden="true"><path d="M11 1 L13.5 7 L20 7.3 L15 11.4 L16.8 17.5 L11 14 L5.2 17.5 L7 11.4 L2 7.3 L8.5 7 Z" fill="none" stroke="${c}" stroke-width="1.2"/></svg>`;
@@ -30,7 +30,7 @@ export function workCardHTML(w, left) {
 
 // Horizontal "Selected work" track (design px; the reference's panel/card rhythm).
 export function workTrackHTML() {
-  const all = `${SITE}/projects`;
+  const all = href('projects/');
   return `<div class="wpanel" style="left:0;width:952px;background:linear-gradient(90deg,#f1f1f1,#e5e5e5);border-right:1px solid rgba(0,0,0,.08)"></div>
     <h2 class="a h89 center" id="wkTitle" style="left:0;width:952px;top:380px;font-weight:500;color:#434343" aria-label="Selected work and explorations"><div></div><div></div></h2>
     <div class="a row" style="left:0;width:952px;top:578px;justify-content:center;color:#434343"><a class="btn roll" href="${all}" style="width:190px"><span data-t="View all projects"></span><b>→</b></a></div>`
@@ -41,23 +41,15 @@ export function workTrackHTML() {
     <div class="a row" style="left:3810px;width:950px;top:542px;justify-content:center;color:#434343"><a class="btn roll" href="${all}" style="width:190px"><span data-t="View all projects"></span><b>→</b></a></div>`;
 }
 
-const ICON = {
-  rings: '<circle cx="40" cy="40" r="36"/><circle cx="40" cy="40" r="27"/><circle cx="40" cy="40" r="18"/><circle cx="40" cy="40" r="9"/>',
-  squares: '<rect x="4" y="4" width="72" height="72"/><rect x="14" y="14" width="52" height="52"/><rect x="24" y="24" width="32" height="32"/><rect x="34" y="34" width="12" height="12"/>',
-  phone: '<rect x="20" y="4" width="40" height="72" rx="8"/><rect x="27" y="12" width="26" height="52" rx="3"/><circle cx="40" cy="69" r="2.5"/>',
-  bars: '<line x1="12" y1="70" x2="12" y2="48"/><line x1="26" y1="70" x2="26" y2="36"/><line x1="40" y1="70" x2="40" y2="24"/><line x1="54" y1="70" x2="54" y2="40"/><line x1="68" y1="70" x2="68" y2="10"/>',
-  target: '<circle cx="40" cy="40" r="34"/><circle cx="40" cy="40" r="20"/><circle cx="40" cy="40" r="6"/><line x1="40" y1="0" x2="40" y2="80"/><line x1="0" y1="40" x2="80" y2="40"/>',
-  spiral: '<path d="M40 40 m0 -6 a6 6 0 1 1 -6 6 a12 12 0 1 1 12 12 a18 18 0 1 1 -18 -18 a24 24 0 1 1 24 24 a30 30 0 1 1 -30 -30"/>',
-};
 export const labHTML = ([h, p, ic, url]) => `<a class="lab" href="${url}"><h3>${h}</h3><svg width="80" height="80" viewBox="0 0 80 80" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.3" aria-hidden="true">${ICON[ic]}</svg><p class="p17">${p}</p></a>`;
-export const labsHTML = () => SERVICES.map(labHTML).join('');
+export const labsHTML = () => SERVICE_CARDS.map(labHTML).join('');
 
 // Ribbon / grid cards: photos from the client's library plus typographic studies.
 const TYPE_CARDS = {
   '2026': `<div style="padding:18px;height:100%;background:#f4f4f2;color:#111"><div style="font-family:'Martian Mono';font-size:9px">SMARTINDIA — NEW WORK</div><div style="font-size:120px;font-weight:600;letter-spacing:-.06em;line-height:1;margin-top:60px">2026</div></div>`,
   'SMART®': `<div style="padding:20px;height:100%;background:linear-gradient(135deg,#2a1b14,#4a2a1c);color:#fff"><div style="font-size:76px;font-weight:800;letter-spacing:-.06em;margin-top:70px">SMART.</div><div style="font-family:'Martian Mono';font-size:9px;margin-top:6px">BRANDS THAT DEFINE GROWTH</div></div>`,
   'DESIGN': `<div style="padding:20px;height:100%;background:linear-gradient(135deg,#e8a4c9,#c45d9a);color:#fff"><div style="font-size:52px;font-weight:700;letter-spacing:-.06em;line-height:.9;margin-top:60px">DESIGN.<br>DEVELOP.<br>DELIVER.</div></div>`,
-  'SEARCH': `<div style="padding:20px;height:100%;background:#eef1ea;color:#1d2a1a"><div style="font-family:'Martian Mono';font-size:9px">SEO — LOCAL &amp; ORGANIC</div><div style="font-size:64px;font-weight:700;letter-spacing:-.06em;line-height:.9;margin-top:56px">Search<br>first.</div></div>`,
+  'APPS': `<div style="padding:20px;height:100%;background:#eef1ea;color:#1d2a1a"><div style="font-family:'Martian Mono';font-size:9px">MOBILE &amp; WEB APPLICATIONS</div><div style="font-size:64px;font-weight:700;letter-spacing:-.06em;line-height:.9;margin-top:56px">Apps<br>first.</div></div>`,
   'CONVERT': `<div style="padding:20px;height:100%;background:linear-gradient(135deg,#14213d,#2b3f73);color:#fff"><div style="font-family:'Martian Mono';font-size:9px">WEB &amp; APP STUDIO</div><div style="font-size:54px;font-weight:600;letter-spacing:-.06em;line-height:.92;margin-top:58px">Built to<br>convert.</div></div>`,
   'TIRUPUR': `<div style="padding:20px;height:100%;background:#ff6b1e;color:#111"><div style="font-family:'Martian Mono';font-size:9px">SMARTINDIA.DIGITAL</div><div style="font-size:58px;font-weight:800;letter-spacing:-.06em;line-height:.9;margin-top:60px">Made in<br>Tirupur.</div></div>`,
 };
@@ -82,7 +74,7 @@ export function mountTestimonials(root, desktop) {
     <div class="t-body${P('left:964px;top:774px;width:749px')}">
       <blockquote class="h34 t-q" aria-live="polite"></blockquote>
       <div class="t-who"><span class="t-av" aria-hidden="true"></span><p class="p17"><b class="t-n"></b><br><span class="t-r"></span></p></div>
-      <a class="btn roll" href="${CONTACT.contactUrl}"><span data-t="Become a client"></span><b>→</b></a>
+      <a class="btn roll" href="${href('contact/')}"><span data-t="Become a client"></span><b>→</b></a>
     </div>
     <div class="t-arrows${P('left:190px;top:1022px')}"><button type="button" aria-label="Previous testimonial">←</button><button type="button" aria-label="Next testimonial">→</button></div>
     ${desktop ? '<div class="a hr dkhr" style="left:38px;top:1242px;width:1844px"></div><div class="a plus dk" style="left:946px;top:1231px">+</div>' : ''}`;

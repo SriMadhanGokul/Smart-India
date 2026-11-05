@@ -118,7 +118,8 @@ export function makeLogo() {
   return {
     scene,
     // ti: intro clock in "video seconds" (5.3 = loader done); vt: scroll position as video time; dS: dark-page scroll px
-    update(ti, vt, dS) {
+    // pose (inner pages): {x, y, s, lift} replaces the homepage's resting place
+    update(ti, vt, dS, pose) {
       const tc = ti < 8.4 ? ti : 8.4 + ((ti - 8.4) % HERO_CYCLE);
       scene.environmentIntensity = .07 + .23 * seg(ti, 6.6, 9.0);
       // intro (leaves the header mark, flies apart in fire, assembles) → idle hover → scroll journey.
@@ -127,7 +128,7 @@ export function makeLogo() {
       if (ti < 8.4) {
         const a = eio(seg(ti, 5.45, 6.7)), b = eio(seg(ti, 6.7, 8.4)), ny = 53 - view.oy / view.u;  // header mark sits in the top-anchored nav
         st = { x: lerp(lerp(52, 900, a), 1010, b), y: lerp(lerp(ny, 450, a), 480, b), z: -1, s: lerp(lerp(.116, 1.05, a), 1.55, b), sep: bump(ti, 5.75, 8.2, .3) * 1.5 };
-      } else st = { x: 1010 + 30 * Math.sin(ti * .3), y: 480, z: -1, s: 1.55, sep: bump(tc, 10.2, 12.8) * 1.25 + bump(tc, 15.2, 17.6) * .9 };
+      } else st = { x: (pose?.x ?? 1010) + 30 * Math.sin(ti * .3), y: (pose?.y ?? 480) - (pose?.lift ?? 0), z: -1, s: pose?.s ?? 1.55, sep: bump(tc, 10.2, 12.8) * 1.25 + bump(tc, 15.2, 17.6) * .9 };
       if (vt > 18.85) {
         const w = eio(seg(vt, 18.85, 19.7));
         for (const k in TRAVEL) st[k] = lerp(st[k], TRAVEL[k](vt), w);

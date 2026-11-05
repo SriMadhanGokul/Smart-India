@@ -135,11 +135,9 @@ for (const w of SERVICES_WORDS) {
 }
 $('#svcB1').innerHTML = '<span id="b1a">✦ Designed with intent. Built to grow.</span><span id="b1b" style="position:absolute;left:0;width:100%">✦ Different services. One standard of craft.</span>';
 const ICON = {
-  rings: '<circle cx="40" cy="40" r="36"/><circle cx="40" cy="40" r="27"/><circle cx="40" cy="40" r="18"/><circle cx="40" cy="40" r="9"/>',
   squares: '<rect x="4" y="4" width="72" height="72"/><rect x="14" y="14" width="52" height="52"/><rect x="24" y="24" width="32" height="32"/><rect x="34" y="34" width="12" height="12"/>',
   phone: '<rect x="20" y="4" width="40" height="72" rx="8"/><rect x="27" y="12" width="26" height="52" rx="3"/><circle cx="40" cy="69" r="2.5"/>',
-  bars: '<line x1="12" y1="70" x2="12" y2="48"/><line x1="26" y1="70" x2="26" y2="36"/><line x1="40" y1="70" x2="40" y2="24"/><line x1="54" y1="70" x2="54" y2="40"/><line x1="68" y1="70" x2="68" y2="10"/>',
-  target: '<circle cx="40" cy="40" r="34"/><circle cx="40" cy="40" r="20"/><circle cx="40" cy="40" r="6"/><line x1="40" y1="0" x2="40" y2="80"/><line x1="0" y1="40" x2="80" y2="40"/>',
+  webapp: '<rect x="4" y="12" width="72" height="56" rx="4"/><line x1="4" y1="26" x2="76" y2="26"/><circle cx="12" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="M31 38 L22 47 L31 56"/><path d="M49 38 L58 47 L49 56"/><line x1="44" y1="35" x2="36" y2="59"/>',
   spiral: '<path d="M40 40 m0 -6 a6 6 0 1 1 -6 6 a12 12 0 1 1 12 12 a18 18 0 1 1 -18 -18 a24 24 0 1 1 24 24 a30 30 0 1 1 -30 -30"/>',
 };
 const labEls = SERVICES.map(([h, p, ic]) => {
@@ -150,7 +148,7 @@ const labEls = SERVICES.map(([h, p, ic]) => {
 
 /* ---------------- DOM: testimonial glimpse ---------------- */
 $('#trPage').innerHTML += `
-  <div class="a" style="left:200px;top:560px;display:flex;gap:90px;filter:blur(7px);opacity:.45;font-size:30px;font-weight:700;color:#444"><span>FashionNova</span><span>TechSolutions</span><span>GreenGrocer</span></div>
+  <div class="a" style="left:200px;top:560px;display:flex;gap:90px;filter:blur(7px);opacity:.45;font-size:30px;font-weight:700;color:#444"><span>FashionNova</span><span>TechSolutions</span><span>Chen Real Estate</span></div>
   <div class="a" style="left:674px;top:686px;width:556px;height:1px;background:rgba(0,0,0,.12)"></div><div class="a" style="left:944px;top:674px;font-size:18px;color:#777">×</div>
   ${TESTIMONIAL.clients.map((c, i) => `<div class="a cap" style="left:192px;top:${774 + i * 32}px;color:${i === TESTIMONIAL.active ? '#434343' : '#aaa'}">${c}${i === TESTIMONIAL.active ? ' &nbsp;→' : ''}</div>`).join('')}
   <div class="a h34" id="trQ" style="left:964px;top:774px;width:749px">${TESTIMONIAL.quote}</div>
@@ -168,7 +166,7 @@ const ribEls = RIBBON.map(r => {
     d.innerHTML = w === '2026' ? `<div style="padding:18px;height:100%;background:#f4f4f2;color:#111"><div style="font-family:'Martian Mono';font-size:9px">SMARTINDIA — NEW WORK</div><div style="font-size:120px;font-weight:600;letter-spacing:-.06em;line-height:1;margin-top:60px">2026</div></div>`
       : w === 'SMART®' ? `<div style="padding:20px;height:100%;background:linear-gradient(135deg,#2a1b14,#4a2a1c);color:#fff"><div style="font-size:76px;font-weight:800;letter-spacing:-.06em;margin-top:70px">SMART®</div><div style="font-family:'Martian Mono';font-size:9px;margin-top:6px">BRAND THAT DEFINES GROWTH</div></div>`
       : w === 'DESIGN' ? `<div style="padding:20px;height:100%;background:linear-gradient(135deg,#e8a4c9,#c45d9a);color:#fff"><div style="font-size:52px;font-weight:700;letter-spacing:-.06em;line-height:.9;margin-top:60px">DESIGN.<br>DEVELOP.<br>DELIVER.</div></div>`
-      : w === 'SEARCH' ? `<div style="padding:20px;height:100%;background:#eef1ea;color:#1d2a1a"><div style="font-family:'Martian Mono';font-size:9px">SEO — LOCAL &amp; ORGANIC</div><div style="font-size:64px;font-weight:700;letter-spacing:-.06em;line-height:.9;margin-top:56px">Search<br>first.</div></div>`
+      : w === 'APPS' ? `<div style="padding:20px;height:100%;background:#eef1ea;color:#1d2a1a"><div style="font-family:'Martian Mono';font-size:9px">MOBILE &amp; WEB APPLICATIONS</div><div style="font-size:64px;font-weight:700;letter-spacing:-.06em;line-height:.9;margin-top:56px">Apps<br>first.</div></div>`
       : w === 'CONVERT' ? `<div style="padding:20px;height:100%;background:linear-gradient(135deg,#14213d,#2b3f73);color:#fff"><div style="font-family:'Martian Mono';font-size:9px">WEB &amp; APP STUDIO</div><div style="font-size:54px;font-weight:600;letter-spacing:-.06em;line-height:.92;margin-top:58px">Built to<br>convert.</div></div>`
       : `<div style="padding:20px;height:100%;background:#ff6b1e;color:#111"><div style="font-family:'Martian Mono';font-size:9px">SMARTINDIA.DIGITAL</div><div style="font-size:58px;font-weight:800;letter-spacing:-.06em;line-height:.9;margin-top:60px">Made in<br>Tirupur.</div></div>`;
   } else d.innerHTML = `<img src="assets/${r}"${r.endsWith('.png') ? ' style="background:#000"' : ''}>`;
@@ -310,7 +308,7 @@ function render(t) {
     $('#b1a').style.opacity = 1 - sw; $('#b1a').style.filter = `blur(${sw * 6}px)`; $('#b1b').style.opacity = sw; $('#b1b').style.filter = `blur(${(1 - sw) * 6}px)`;
     // two lanes beside the stone (never over it): left lane rises, right lane descends, ~4 labels on screen
     labEls.forEach((el, i) => {
-      const lane = i % 2, s = 62.4 + i * .5, p = (t - s) / 2.0;
+      const lane = i % 2, s = 62.4 + i * 2.5 / (labEls.length - 1), p = (t - s) / 2.5;
       const x = lane ? 1590 : 330, y = lane ? lerp(150, 700, p) : lerp(700, 150, p);
       const on = p <= 0 || p >= 1 ? 0 : Math.min(eout(seg(p, 0, .16)), 1 - eout(seg(p, .84, 1))) * (1 - seg(t, 66.0, 66.45));
       el.style.transform = `translate3d(${x - 230}px,${y - 125}px,0) rotateX(${(lane ? -1 : 1) * (p - .5) * 10}deg)`;

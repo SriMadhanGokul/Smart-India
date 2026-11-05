@@ -1,24 +1,19 @@
-// Site chrome shared by both layouts: header, menu overlay, ambient sound, footer, analytics.
-import { NAV, SOCIAL, CONTACT, FOOTER, markSVG } from './content.js';
+// Site chrome behaviour shared by every page: menu overlay, ambient sound, footer, page transitions, analytics.
+// The markup itself is rendered at build time (site/layout.js).
+import { CONTACT, MEDIA } from './content.js';
 import { $, $$, initRoll } from './ui.js';
+
+const root = document.documentElement;
+const BASE = import.meta.env.BASE_URL;
+const reduceMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 function setRoll(el, text) { el.dataset.t = text; el.__roll = false; initRoll(el.parentElement); }
 
 export function initChrome({ lenis }) {
   const nav = $('#nav'), menu = $('#menu'), menuBtn = $('#navMenu');
-  $('#navLogo').innerHTML = `<span id="navMark" style="display:flex">${markSVG(26, 'currentColor')}</span><span>SMARTINDIA</span>`;
   for (const a of $$('.callBtn')) a.href = `tel:${CONTACT.tel}`;
 
   /* ---------- menu ---------- */
-  $('#menuLinks').innerHTML = NAV.map(([t, href], i) =>
-    `<li style="--i:${i}"><a class="roll" href="${href}"><small>${String(i + 1).padStart(2, '0')}</small><span data-t="${t}"></span></a></li>`).join('');
-  const mail = $('#menuMail'), tel = $('#menuTel');
-  mail.href = `mailto:${CONTACT.email}`; mail.innerHTML = `<span data-t="${CONTACT.email}"></span>`;
-  tel.href = `tel:${CONTACT.tel}`; tel.innerHTML = `<span data-t="${CONTACT.phone}"></span>`;
-  $('#menuAddr').innerHTML = `${CONTACT.city}<br>${CONTACT.hours}`;
-  const socialHTML = SOCIAL.map(([n, h]) => `<a class="roll" href="${h}"${h === '#' ? ' data-soon' : ' target="_blank" rel="noopener"'}><span data-t="${n}"></span></a>`).join('');
-  $('#menuSocial').innerHTML = socialHTML;
-
   let open = false, introLock = false;
   const sync = () => (open || introLock ? lenis.stop() : lenis.start());
   const setMenu = on => {
@@ -49,34 +44,62 @@ export function initChrome({ lenis }) {
     fadeId = requestAnimationFrame(step);
   };
   snd.addEventListener('click', () => {
-    if (!audio) { audio = new Audio('/media/ambient.mp3'); audio.loop = true; audio.volume = 0; }
+    if (!audio) { audio = new Audio(`${MEDIA}ambient.mp3`); audio.loop = true; audio.volume = 0; }
     const on = snd.getAttribute('aria-pressed') !== 'true';
     snd.setAttribute('aria-pressed', String(on)); snd.setAttribute('aria-label', on ? 'Mute ambient sound' : 'Play ambient sound');
     if (on) { audio.play().then(() => fade(.4)).catch(() => {}); } else fade(0, () => audio.pause());
   });
 
-  /* ---------- footer ---------- */
-  $('#fKicker').textContent = FOOTER.kicker;
-  $('#fHead').textContent = FOOTER.heading;
-  const fm = $('#fMail'), ft = $('#fTel');
-  fm.href = `mailto:${CONTACT.email}`; fm.innerHTML = `<span data-t="${CONTACT.email}"></span>`;
-  ft.href = `tel:${CONTACT.tel}`; ft.innerHTML = `<span data-t="${CONTACT.phone}"></span>`;
-  $('#fSocial').innerHTML = socialHTML;
-  $('#fCopy').textContent = `© ${new Date().getFullYear()} SMARTINDIA.DIGITAL`;
-  $('#fAddr').textContent = CONTACT.city;
-  // social profiles are not set yet: keep the links inert instead of jumping to the top
-  for (const a of $$('[data-soon]')) a.addEventListener('click', e => e.preventDefault());
+  /* ---------- page transition: five slats close, the next page opens them ---------- */
+  const wipe = $('#wipe');
+  document.addEventListener('click', e => {
+    const a = e.target.closest?.('a[href]');
+    if (!a || e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    if (a.hasAttribute('data-soon')) { e.preventDefault(); return; }     // social profiles are not set yet
+    if (a.target === '_blank' || a.hasAttribute('download')) return;
+    const u = new URL(a.href, location.href);
+    if (u.origin !== location.origin || !u.pathname.startsWith(BASE)) return;
+    if (u.pathname === location.pathname) {
+      e.preventDefault();
+      if (open) setMenu(false);
+      lenis.scrollTo(0, { immediate: reduceMotion(), force: true });
+      return;
+    }
+    if (reduceMotion()) return;
+    e.preventDefault();
+    try { sessionStorage.setItem('si-wipe', '1'); } catch { /* private mode: page simply opens without the wipe */ }
+    wipe.classList.add('in');
+    setTimeout(() => { location.href = a.href; }, 720);
+  });
+  // back/forward restores a frozen page with the slats still closed
+  addEventListener('pageshow', e => {
+    if (!e.persisted) return;
+    wipe.classList.remove('in'); root.classList.remove('wiped');
+    try { sessionStorage.removeItem('si-wipe'); } catch { /* nothing to clear */ }
+  });
 
+  /* ---------- footer ---------- */
   const clock = $('#clock'), fmt = new Intl.DateTimeFormat('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', hour12: true });
   const tick = () => { clock.textContent = `IST → ${fmt.format(new Date()).toUpperCase()}`; };
   tick(); setInterval(tick, 15000);
 
   footerLines();
   initRoll();
-  if (import.meta.env.PROD) analytics();
+  // only the real site reports to the client's accounts: never local builds or preview hosts
+  if (import.meta.env.PROD && /(^|\.)smartindia\.digital$/.test(location.hostname)) analytics();
 
-  // lock(true) holds the page still (intro); scrolling resumes when neither the intro nor the menu holds it
-  return { nav, isMenuOpen: () => open, lock(on) { introLock = on; sync(); } };
+  return {
+    nav,
+    isMenuOpen: () => open,
+    // lock(true) holds the page still (intro); scrolling resumes when neither the intro nor the menu holds it
+    lock(on) { introLock = on; sync(); },
+    // open the slats once the new page is ready to be seen
+    reveal() {
+      if (!root.classList.contains('wiped')) return;
+      root.classList.remove('wiped');
+      try { sessionStorage.removeItem('si-wipe'); } catch { /* nothing to clear */ }
+    },
+  };
 }
 
 // Footer background: fine horizontal lines that ripple, and swell gently around the pointer.
@@ -88,10 +111,10 @@ function footerLines() {
   addEventListener('resize', () => on && size());
   foot.addEventListener('pointermove', e => { const r = foot.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top; });
   foot.addEventListener('pointerleave', () => { mx = my = -1e4; });
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const still = reduceMotion();
   function draw(now) {
     if (!on) return;
-    const t = reduce ? 0 : now / 1000, n = 34, gap = h / n;
+    const t = still ? 0 : now / 1000, n = 34, gap = h / n;
     g.clearRect(0, 0, w, h);
     g.lineWidth = 1;
     for (let i = 1; i < n; i++) {
@@ -109,7 +132,7 @@ function footerLines() {
   }
 }
 
-// The client's existing Microsoft Clarity and Meta Pixel, loaded only in production builds.
+// The client's existing Microsoft Clarity and Meta Pixel.
 function analytics() {
   (function (c, l, a, r, i, t, y) { c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); }; t = l.createElement(r); t.async = 1; t.src = 'https://www.clarity.ms/tag/' + i; y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y); })(window, document, 'clarity', 'script', 'xxhznt5zik');
   !function (f, b, e, v, n, t, s) { if (f.fbq) return; n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); }; if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = []; t = b.createElement(e); t.async = !0; t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s); }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');

@@ -67,6 +67,23 @@ html.full::-webkit-scrollbar { display: none; }
 /* ---------- loader ---------- */
 #loader { position: fixed; inset: 0; z-index: 100; background: #c9c9c9; color: #111; overflow: hidden; }
 #loader.gone { display: none; }
+.seen #loader { background: var(--bg); }
+.seen #loader > * { display: none; }
+
+/* ---------- page transition: five slats close upward, then the next page opens them ---------- */
+#wipe { position: fixed; inset: 0; z-index: 90; display: flex; flex-direction: column; pointer-events: none; }
+#wipe i { flex: 1; margin-top: -1px; background: #0c0c0c; transform: scaleY(0); transform-origin: 50% 0; transition: transform .62s cubic-bezier(.7, 0, .2, 1); }
+#wipe i:nth-child(5) { transition-delay: 0s; }
+#wipe i:nth-child(4) { transition-delay: .05s; }
+#wipe i:nth-child(3) { transition-delay: .1s; }
+#wipe i:nth-child(2) { transition-delay: .15s; }
+#wipe i:nth-child(1) { transition-delay: .2s; }
+#wipe.in { pointer-events: auto; }
+#wipe.in i { transform: scaleY(1); transform-origin: 50% 100%; }
+.wiped #wipe i { transform: scaleY(1); transition: none; }
+.wiped #wipe { animation: wipeOff .01s 8s forwards; }
+@keyframes wipeOff { to { visibility: hidden; } }
+@media (prefers-reduced-motion: reduce) { #wipe { display: none; } }
 #ldBox { position: absolute; left: 50%; top: 50%; width: 0; height: 0; }
 #ldFill { position: absolute; inset: 0; background: #d6d6d6; opacity: 0; }
 #ldFrame { position: absolute; left: 0; top: 0; overflow: visible; }
@@ -185,14 +202,15 @@ html.full::-webkit-scrollbar { display: none; }
 .wimg { position: relative; width: 802px; height: 548px; overflow: hidden; background: #999; display: block; }
 .wimg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 1.4s cubic-bezier(.2, .7, .2, 1); }
 .wcard:hover .wimg img { transform: scale(1.045); }
-.wimg .wfr { position: absolute; inset: 14px; border: 1px solid rgba(255, 255, 255, .55); }
-.wimg b { position: absolute; left: 58px; bottom: 26px; font-size: 96px; font-weight: 500; letter-spacing: -.06em; color: #fff; text-shadow: 0 4px 30px rgba(0, 0, 0, .45); }
+.wimg::after { content: ""; position: absolute; inset: auto 0 0 0; height: 46%; background: linear-gradient(transparent, rgba(0, 0, 0, .5)); pointer-events: none; }
+.wimg .wfr { position: absolute; inset: 14px; border: 1px solid rgba(255, 255, 255, .55); z-index: 1; }
+.wimg b { position: absolute; z-index: 1; left: 58px; bottom: 26px; font-size: 96px; font-weight: 500; letter-spacing: -.06em; color: #fff; text-shadow: 0 4px 30px rgba(0, 0, 0, .45); }
 
 /* services */
 #svc { z-index: 14; color: #111; }
 #svText { z-index: 15; pointer-events: none; }
 #svWrap { left: 0; top: 241px; width: 1920px; font-weight: 400; }
-.sv { font-size: 150px; line-height: 100.8px; letter-spacing: -12px; text-align: center; white-space: nowrap; text-transform: uppercase; }
+.sv { font-size: 150px; line-height: 100.8px; letter-spacing: -12px; word-spacing: 18px; text-align: center; white-space: nowrap; text-transform: uppercase; }
 #svcB1 > span { display: block; }
 #b1b { position: absolute; left: 0; top: 0; width: 100%; opacity: 0; }
 #labs { left: 0; top: 0; width: 1920px; height: 868px; perspective: 1300px; }
@@ -289,6 +307,7 @@ html.full::-webkit-scrollbar { display: none; }
 .l-hero { min-height: 100svh; display: flex; flex-direction: column; padding-top: 112px; padding-bottom: 28px; overflow: hidden; }
 .l-mark { position: absolute; right: -12vw; top: max(300px, 34svh); width: min(72vw, 520px); aspect-ratio: 1; pointer-events: none; opacity: .92; }
 .l-mark svg { width: 100%; height: 100%; overflow: visible; }
+.l-mark svg, .l-mark .glow { position: absolute; }
 .l-mark .glow { position: absolute; inset: 12%; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 106, 31, .45), rgba(255, 60, 10, .12) 55%, transparent); filter: blur(18px); animation: ember 5s ease-in-out infinite; }
 @keyframes ember { 0%, 100% { opacity: .55; transform: scale(.94); } 50% { opacity: 1; transform: scale(1.05); } }
 .l-h1 { position: relative; font-size: clamp(46px, 12.4vw, 100px); line-height: .9; letter-spacing: -.065em; }
@@ -334,7 +353,10 @@ html.full::-webkit-scrollbar { display: none; }
 .l-svwords { margin: 28px 0 36px; text-align: center; font-size: clamp(40px, 12.5vw, 120px); line-height: .82; letter-spacing: -.075em; text-transform: uppercase;
   background: linear-gradient(180deg, #f4f6fa 0%, rgba(214, 220, 232, .55) 55%, rgba(160, 170, 190, .25) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .l-labs { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
-.l-labs .lab { position: relative; width: auto; height: 210px; opacity: 1; }
+.l-labs .lab { position: relative; width: auto; height: auto; min-height: 210px; opacity: 1; padding: 24px 22px; display: flex; flex-direction: column; justify-content: space-between; gap: 28px; }
+.l-labs .lab h3 { font-size: clamp(24px, 6.4vw, 33.75px); line-height: 1.04; letter-spacing: -.04em; padding-right: 66px; }
+.l-labs .lab svg { width: 56px; height: 56px; right: 22px; top: 24px; }
+.l-labs .lab p { position: static; width: auto; }
 .l-svc > .btn { width: 190px; margin-top: 34px; }
 .l-testi { background: linear-gradient(#fafafa, #e9e9e9); color: var(--ink); }
 .l-testi .t-logos { flex-wrap: wrap; gap: 14px 30px; font-size: 20px; margin: 26px 0 30px; justify-content: flex-start; }
@@ -352,8 +374,8 @@ html.full::-webkit-scrollbar { display: none; }
 .l-dim .btn { width: 182px; margin-top: 22px; }
 
 /* reveal on scroll (lite) */
-.rv { opacity: 0; transform: translateY(26px); filter: blur(6px); transition: opacity .9s, transform 1s cubic-bezier(.2, .8, .2, 1), filter .9s; }
-.rv.in { opacity: 1; transform: none; filter: none; }
+.js .rv { opacity: 0; transform: translateY(26px); filter: blur(6px); transition: opacity .9s, transform 1s cubic-bezier(.2, .8, .2, 1), filter .9s; }
+.js .rv.in { opacity: 1; transform: none; filter: none; }
 
 /* lite footer */
 .lite #footer { height: auto; }
@@ -371,6 +393,6 @@ html.full::-webkit-scrollbar { display: none; }
 .lite #fSocial a, .lite .finfo p { font-size: 15px; }
 
 @media (prefers-reduced-motion: reduce) {
-  .rv { opacity: 1; transform: none; filter: none; transition: none; }
+  .js .rv { opacity: 1; transform: none; filter: none; transition: none; }
   .l-mq-in, .l-mark .glow, .heroDot i { animation: none; }
 }

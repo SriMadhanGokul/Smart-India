@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite --port 5179 --strictPort",
     "build": "vite build",
+    "build:pages": "vite build --mode pages",
     "preview": "vite preview --port 4179 --strictPort"
   },
   "dependencies": {

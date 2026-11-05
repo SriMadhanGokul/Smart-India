@@ -1,5 +1,7 @@
 # Smart India — 3D website and promo video
 
+**Live preview:** https://srimadhangokul.github.io/Smart-India/
+
 | Folder | What it is |
 |---|---|
 | [`website/`](website/) | The SMARTINDIA.DIGITAL homepage. It's a Vite app with a scroll-driven 3D story on desktop and a stacked layout for mobile. See [`website/README.md`](website/README.md). |
